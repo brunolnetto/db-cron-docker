@@ -4,7 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from os import path
 from functools import reduce
-import requests.exceptions import RequestException
+from requests.exceptions import RequestException
 
 from database.models import AuditDB
 from database.dml import (
@@ -81,7 +81,7 @@ def download_this_zipfile(
         except RequestException as e:
             logger.error(f"Download attempt failed: {e}")
             
-        except OSError as e:
+        except OSError:
             raise  # Re-raise for critical file system errors
 
     return audit

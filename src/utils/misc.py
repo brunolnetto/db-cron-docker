@@ -3,6 +3,7 @@ from os import path, remove, cpu_count, stat
 from requests import head
 from shutil import rmtree
 from unicodedata import normalize
+from datetime import timedelta
 from os import makedirs
 import subprocess
 import re
@@ -197,7 +198,7 @@ def delete_var(var):
     """
     try:
         del var
-    except:
+    except Exception:
         pass
 
 def this_folder():
@@ -345,8 +346,6 @@ def normalize_filenames(filenames):
       normalized_dict[base_name].append(filename)
     
   return normalized_dict
-
-from datetime import timedelta
 
 
 def get_date_range(timestamps):

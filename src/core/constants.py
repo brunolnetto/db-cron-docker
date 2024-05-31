@@ -11,10 +11,10 @@ FENCE=repeat_token(FENCE_CHARACTER, FENCE_LENGTH)
 # Arquivos de empresa:
 def empresa_transform_map(artifact):
     # Replace "," por "."
-    comma_to_period=lambda x: x.replace(',','.')
-    artifact['capital_social'] = artifact['capital_social'].apply(comma_to_period)
-    artifact['capital_social'] = artifact['capital_social'].astype(float)
-
+    artifact['capital_social'] = artifact['capital_social']\
+        .apply(lambda x: x.replace(',','.'))\
+        .astype(float)
+    
     return artifact
 
 # Tabelas

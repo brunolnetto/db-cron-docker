@@ -50,60 +50,51 @@ def create_audit(database: Database, file_group_info: FileGroupInfo) -> Union[Au
         filename: The filename for the audit entry.
         new_processed_at: The new processed datetime value.
     """
-    if database.engine:
-        with database.session_maker() as session:
-            # NOTE: Uncomment this if you want to use SQLAlchemy ORM
-            # # Get the latest processed_at for the filename
-            # latest_source_updated_at = func.max(AuditDB.audi_source_updated_at)
-            # is_table_name = AuditDB.audi_table_name == file_group_info.table_name
-            # query = session.query(latest_source_updated_at)
-            #
-            # latest_updated_at = query.filter(is_table_name).first()[0]
-            
+    if database.engine:            
+        # Execute query with parameters (optional)
+        with database.engine.connect() as connection:
             # Define raw SQL query
             sql_query = text(f"""SELECT max(audi_source_updated_at) 
                 FROM public.audit 
                 WHERE audi_table_name = \'{file_group_info.table_name}\';"""
             )
             
-            # Execute query with parameters (optional)
-            with database.engine.connect() as connection:
-                result = connection.execute(sql_query)
-            
-                # Process results (e.g., fetchall, fetchone)
-                latest_updated_at = result.fetchone()[0]
-            
-            # First entry: no existing audit entry
-            if latest_updated_at is None:
-                # Create and insert the new entry
-                return create_new_audit(
-                    file_group_info.table_name,
-                    file_group_info.elements,
-                    file_group_info.size_bytes, 
-                    file_group_info.date_range[1]
-                )
+            result = connection.execute(sql_query)
+        
+            # Process results (e.g., fetchall, fetchone)
+            latest_updated_at = result.fetchone()[0]
+        
+        # First entry: no existing audit entry
+        if latest_updated_at is None:
+            # Create and insert the new entry
+            return create_new_audit(
+                file_group_info.table_name,
+                file_group_info.elements,
+                file_group_info.size_bytes, 
+                file_group_info.date_range[1]
+            )
 
-            # New entry: source updated_at is greater 
-            elif(file_group_info.date_range[1] > latest_updated_at):
-                # Create and insert the new entry
-                return create_new_audit(
-                    file_group_info.table_name, 
-                    file_group_info.elements,
-                    file_group_info.size_bytes, 
-                    file_group_info.date_range[1]
-                )
+        # New entry: source updated_at is greater 
+        elif(file_group_info.date_range[1] > latest_updated_at):
+            # Create and insert the new entry
+            return create_new_audit(
+                file_group_info.table_name, 
+                file_group_info.elements,
+                file_group_info.size_bytes, 
+                file_group_info.date_range[1]
+            )
+        
+        # Not all files are updated in batch aka unreliable
+        elif(file_group_info.date_diff() > 7):
+            return None
+        
+        else:
+            summary=f'Skipping create entry for file group {file_group_info.name}.'
+            explanation='Existing processed_at is later or equal.'
+            error_message=f"{summary} {explanation}"
+            logger.warn(error_message)
             
-            # Not all files are updated in batch aka unreliable
-            elif(file_group_info.date_diff() > 7):
-                return None
-            
-            else:
-                summary=f'Skipping create entry for file group {file_group_info.name}.'
-                explanation='Existing processed_at is later or equal.'
-                error_message=f"{summary} {explanation}"
-                logger.warn(error_message)
-                
-                return None
+            return None
 
     else:
         logger.error("Error connecting to the database!")
