@@ -1,16 +1,38 @@
 from sys import stdout
 from os import path, remove, cpu_count, stat
-from zipfile import ZipFile
 from requests import head
 from shutil import rmtree
 from unicodedata import normalize
 from os import makedirs
 import subprocess
 import re
-from tqdm import tqdm
-import wget
+import requests
 
 from setup.logging import logger
+
+def download_file(url, timeout=10, retries=3):
+  """
+  Downloads a file from the specified URL with timeout and retry handling.
+
+  Args:
+      url (str): The URL of the file to download.
+      timeout (int, optional): The connection timeout in seconds. Defaults to 10.
+      retries (int, optional): The number of retries on failure. Defaults to 3.
+
+  Returns:
+      bool: True if download is successful, False otherwise.
+  """
+  for attempt in range(retries + 1):
+    try:
+      response = requests.get(url, timeout=timeout)
+      response.raise_for_status()  # Raise exception for non-200 status codes
+      with open('filename.zip', 'wb') as f:  # Replace 'filename.zip' with desired name
+        f.write(response.content)
+      return True
+    except requests.exceptions.RequestException as e:
+      print(f"Download attempt {attempt} failed: {e}")
+  return False
+
 
 def repeat_token(token: str, n: int):
     """

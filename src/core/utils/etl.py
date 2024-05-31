@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from os import path
 from functools import reduce
+import requests.exceptions import RequestException
 
 from database.models import AuditDB
 from database.dml import (
@@ -27,6 +28,8 @@ tablename_tuples = list(zip(tablename_list, trimmed_tablename_list))
 ## LER E INSERIR DADOS #############################################################################
 ####################################################################################################
 
+MAX_RETRIES = 3
+
 def download_this_zipfile(
     audit: AuditDB,
     url: str,
@@ -49,31 +52,40 @@ def download_this_zipfile(
 
     full_path = path.join(download_path, zip_filename)
     
-    try:
-        logger.info(f"Downloading file {zip_filename}.")
-        file_url = url + '/' + zip_filename
+    audit = None
+    for attempt in range(MAX_RETRIES + 1):
+        logger.info(f"Downloading file {zip_filename}, attempt {attempt+1} of {MAX_RETRIES+1}.")
         
-        # Assuming download updates progress bar itself
-        if(has_progress_bar):
-            download(file_url, out=download_path)
-        else:
-            download(file_url, out=download_path, bar=None)
+        try:
+            logger.info(f"Downloading file {zip_filename}.")
+            file_url = url + '/' + zip_filename
+            
+            # Assuming download updates progress bar itself
+            if(has_progress_bar):
+                download(file_url, out=download_path)
+            else:
+                download(file_url, out=download_path, bar=None)
 
-    except Exception as e:
-        summary=f"Error downloading {url}"
-        message=f"{summary}: {e}"
-        logger.error(message)
+            # Update audit metadata
+            audit.audi_downloaded_at = datetime.now()
+            audit.audi_file_size_bytes = get_file_size(full_path)
+
+            logger.info(f"Finished file download of file {zip_filename}.")
+            break
+
+        except Exception as e:
+            summary=f"Error downloading {url}"
+            message=f"{summary}: {e}"
+            logger.error(message)
+            
+        except RequestException as e:
+            logger.error(f"Download attempt failed: {e}")
+            
+        except OSError as e:
+            raise  # Re-raise for critical file system errors
+
+    return audit
         
-        return None
-    
-    finally:
-        logger.info(f"Finished file download of file {zip_filename}...")
-
-        # Update audit metadata
-        audit.audi_downloaded_at = datetime.now()
-        audit.audi_file_size_bytes = get_file_size(full_path)
-
-        return audit
 
 def extract_this_zipfile(
     audit: AuditDB,
@@ -95,21 +107,24 @@ def extract_this_zipfile(
     
     full_path = path.join(download_path, zip_filename)
 
-    try:
-        logger.info(f"Extracting file {zip_filename}...")
-        # Assuming extraction updates progress bar itself
-        extract_zip_file(full_path, extracted_path)
-    
-    except Exception as e:
-        summary=f"Error extracting file {zip_filename}"
-        message=f"{summary}: {e}"
-        logger.error(message)
-    
-    finally:
-        logger.info(f"Finished file extraction of file {zip_filename}.")
+    audit = None
+    for attempt in range(MAX_RETRIES + 1):
+        try:
+            logger.info(f"Extracting file {zip_filename}, attempt {attempt+1} of {MAX_RETRIES+1}.")
+            
+            # Assuming extraction updates progress bar itself
+            extract_zip_file(full_path, extracted_path)
+
+            audit.audi_processed_at = datetime.now()
+
+            logger.info(f"Finished file extraction of file {zip_filename}.")
         
-        audit.audi_processed_at = datetime.now()
-        return audit
+        except Exception as e:
+            summary=f"Error extracting file {zip_filename}"
+            message=f"{summary}: {e}"
+            logger.error(message)
+
+    return audit
 
 
 def download_and_extract_file(

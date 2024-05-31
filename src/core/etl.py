@@ -1,10 +1,9 @@
-from typing import List
 import re
+from typing import List
 from urllib import request
 from bs4 import BeautifulSoup
 from datetime import datetime
 from functools import reduce
-from shutil import rmtree
 
 from setup.logging import logger
 from core.utils.schemas import create_file_groups
@@ -34,6 +33,7 @@ class CNPJ_ETL:
         self.download_folder = download_folder
         self.extract_folder = extract_folder
         self.is_parallel = is_parallel
+        self.delete_zips = delete_zips
         
     def scrap(self):
         """
@@ -60,11 +60,12 @@ class CNPJ_ETL:
             collect_date=lambda text: text and re.search(regex_pattern, text)
             date_cell = row.find('td', text=collect_date)
             
-            size_types=['K', 'M', 'G']
+            # Find cell containing file size
+            SIZE_TYPES=['K', 'M', 'G', 'T', 'P', 'E', 'Z', 'Y']
             or_map = lambda a, b: a or b
             is_size_type = lambda text: reduce(
                 or_map, 
-                [text.endswith(size_type) for size_type in size_types]
+                [text.endswith(size_type) for size_type in SIZE_TYPES]
             )
             size_cell = row.find('td', text=lambda text: text and is_size_type(text))
             
@@ -164,10 +165,7 @@ class CNPJ_ETL:
             self.database, self.extract_folder, audit_metadata
         )
 
-        # Insert audit metadata
-        for audit in audit_metadata.audit_list:
-            insert_audit(self.database, audit)
-
+        return audit_metadata
 
     def run(self):
         """
@@ -181,5 +179,9 @@ class CNPJ_ETL:
         if audit_metadata:
             # Load data
             self.load_data(audit_metadata)
+
+            # Insert audit metadata
+            for audit in audit_metadata.audit_list:
+                insert_audit(self.database, audit)
         else: 
             logger.warn("No data to load!")
