@@ -1,13 +1,13 @@
 from logging.config import fileConfig
 from os import getenv, path, getcwd
 from dotenv import load_dotenv
+from alembic import context
+from sqlalchemy.engine.url import URL
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from src.database.models import Base
-
-from alembic import context
-
+from src.utils.docker import get_postgres_host
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -36,8 +36,22 @@ user=getenv('POSTGRES_USER')
 password=getenv('POSTGRES_PASSWORD')
 db_name=getenv('POSTGRES_NAME')
 
-url=f'{user}:{password}@{host}:{port}/{db_name}'
-uri=f"postgresql://{url}"
+# Get the host based on the environment
+if getenv('ENVIRONMENT') == 'docker':
+    host = get_postgres_host()
+else: 
+    host = getenv('POSTGRES_HOST', 'localhost')
+
+uri=URL(
+    drivername='postgresql',
+    username=user,
+    password=password,
+    host=host,
+    port=port,
+    database=db_name,
+    query={ 'client_encoding': 'utf8' }
+)
+
 config.attributes['sqlalchemy.url'] = uri
 
 def run_migrations_offline() -> None:
@@ -75,6 +89,7 @@ def run_migrations_online() -> None:
         config.get_section(config.config_ini_section, {}),
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
+        url=uri
     )
 
     with connectable.connect() as connection:
