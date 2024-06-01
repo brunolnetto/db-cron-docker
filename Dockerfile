@@ -1,6 +1,6 @@
 FROM python:3.9-slim-bullseye
 
-mkdir -p /app
+RUN mkdir -p /app
 WORKDIR /app
 
 # Copy your application code

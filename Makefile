@@ -56,6 +56,24 @@ minimal-requirements: ## Generates minimal requirements. Usage: make minimal-req
 db-ip: ## Get the database IP. Usage: make db-ip
 	docker inspect crawler-db | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
 
+kill-db: ## Kill the database container. Usage: make kill-db
+	docker inspect db-crawler | jq -r '.[0].State.Pid' | sudo xargs kill
+
+up: ## Start the containers. Usage: make up
+	docker-compose up -d
+
+down: ## Stop the containers. Usage: make down
+	docker-compose down
+
+ps: ## List the containers. Usage: make ps
+	docker-compose ps
+
+build: ## Build the containers. Usage: make build
+	docker-compose build
+
+log-crawler: ## Show the logs of the crawler container. Usage: make log-crawler
+	docker logs -f crawler
+
 lint: ## perform inplace lint fixes
 	ruff check --fix .
 
