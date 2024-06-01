@@ -9,6 +9,7 @@ from core.constants import TABLES_INFO_DICT, CHUNK_SIZE
 from core.schemas import TableInfo
 from database.schemas import Database
 from setup.logging import logger
+from constants import MAX_RETRIES
 
 ##########################################################################
 ## LOAD AND TRANSFORM
@@ -67,15 +68,23 @@ def populate_table_with_filename(
         update_progress(index * CHUNK_SIZE, row_count_estimation, filename)
         
         # Gravar dados no banco
-        to_sql(
-            df_chunk, 
-            filename=extracted_file_path,
-            tablename=table_info.table_name, 
-            conn=database.engine, 
-            if_exists='append', 
-            index=False,
-            verbose=False
-        )
+        for attempt in range(MAX_RETRIES + 1):
+            msg=f"Attempt {attempt+1} of {MAX_RETRIES+1} to insert file {filename}."
+            logger.info(msg)
+
+            try:
+                to_sql(
+                    df_chunk, 
+                    filename=extracted_file_path,
+                    tablename=table_info.table_name, 
+                    conn=database.engine, 
+                    if_exists='append', 
+                    index=False,
+                    verbose=False
+                )
+                break
+            except Exception as e:
+                logger.error(f"Error on append of file {filename}: {e}")
     
     update_progress(row_count_estimation, row_count_estimation, filename)
     print()
@@ -105,16 +114,26 @@ def populate_table_with_filenames(
     title=f'Arquivos de tabela {table_info.label.upper()}:'
     logger.info(title)
     
+    table_name=table_info.table_name
+
     # Drop table (if exists)
-    with database.engine.connect() as conn:
-        query=text(f"DROP TABLE IF EXISTS {table_info.table_name};")
+    with database.connect() as conn:
+        query=text(f"DROP TABLE IF EXISTS {table_name};")
         
-        # Execute the compiled SQL string
-        conn.execute(query)
+        for attempt in range(MAX_RETRIES + 1):
+            msg=f"Drop table {table_name}, attempt {attempt+1} of {MAX_RETRIES+1}."
+            logger.info(msg)
+            
+            try:
+                # Execute the compiled SQL string
+                conn.execute(query)
+                break
+            except:
+                logger.error(f"Error on drop of table {table_name}.")
     
     # Inserir dados
     for filename in filenames:
-        logger.info('Trabalhando no arquivo: ' + filename + ' [...]')
+        logger.info('Trabalhando no arquivo: ' + filename)
         try:
             populate_table_with_filename(database, table_info, from_folder, filename)
 
@@ -181,23 +200,25 @@ def generate_tables_indices(engine, tables):
     fields_tables = [(f'{table}_cnpj', table) for table in tables]
     mask="create index {field} on {table}(cnpj_basico);"
     
-    try:
-        with engine.connect() as conn:
-            queries = [ 
-                mask.format(field=field_, table=table_) 
-                for field_, table_ in fields_tables 
-            ]
-            query=text("\n".join(queries) + "\n" + "commit")
-            
-            # Execute the compiled SQL string
+    with engine.connect() as conn:
+        queries = [ 
+            mask.format(field=field_, table=table_) 
+            for field_, table_ in fields_tables 
+        ]
+        query=text("\n".join(queries) + "\n" + "commit")
+        
+        # Execute the compiled SQL string
+        for attempt in range(MAX_RETRIES + 1):
+            msg=f"Attempt {attempt+1} of {MAX_RETRIES+1} to create indexes on tables {fields_tables}."
+            logger.info(msg)
+        
             try:
                 conn.execute(query)
             except Exception as e:
-                logger.error(f"Erro ao criar índices: {e}")
+                logger.error(f"Error on index creation: {e}")
 
         message = f"Índices criados nas tabelas, para a coluna `cnpj_basico`: {tables}"
         logger.info(message)
+
     
-    except Exception as e:
-        logger.error(f"Erro ao criar índices: {e}") 
 
