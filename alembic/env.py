@@ -38,7 +38,6 @@ db_name=getenv('POSTGRES_NAME')
 
 url=f'{user}:{password}@{host}:{port}/{db_name}'
 uri=f"postgresql://{url}"
-print(uri)
 config.attributes['sqlalchemy.url'] = uri
 
 def run_migrations_offline() -> None:
