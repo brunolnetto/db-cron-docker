@@ -56,8 +56,13 @@ minimal-requirements: ## Generates minimal requirements. Usage: make minimal-req
 db-ip: ## Get the database IP. Usage: make db-ip
 	docker inspect db-cron-task | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
 
-kill: ## Kill the database container. Usage: make kill-db
+kill-db: ## Kill the database container. Usage: make kill-db
 	docker inspect db-cron-task | jq -r '.[0].State.Pid' | sudo xargs kill
+
+kill-cron: ## Kill the database container. Usage: make kill-db
+	docker inspect cron-task | jq -r '.[0].State.Pid' | sudo xargs kill
+
+kill: kill-db kill-cron ## Kill the database and cron containers. Usage: make kill
 
 up: ## Start the containers. Usage: make up
 	docker-compose up -d
