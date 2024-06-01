@@ -1,5 +1,6 @@
 from logging.config import fileConfig
-from os import getenv
+from os import getenv, path, getcwd
+from dotenv import load_dotenv
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
@@ -26,6 +27,9 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+env_path = path.join(getcwd(), '.env')
+load_dotenv()
+
 host=getenv('POSTGRES_HOST')
 port=getenv('POSTGRES_PORT')
 user=getenv('POSTGRES_USER')
@@ -34,7 +38,8 @@ db_name=getenv('POSTGRES_NAME')
 
 url=f'{user}:{password}@{host}:{port}/{db_name}'
 uri=f"postgresql://{url}"
-config.config.attributes['sqlalchemy.url'] = uri
+print(uri)
+config.attributes['sqlalchemy.url'] = uri
 
 def run_migrations_offline() -> None:
     """Run migrations in 'offline' mode.
