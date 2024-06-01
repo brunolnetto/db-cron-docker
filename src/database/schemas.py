@@ -10,3 +10,10 @@ class Database(NamedTuple):
   """
   engine: callable
   session_maker: callable
+
+  def connect(self):
+    """
+    Connects to the database.
+    """
+    with self.engine.connect() as conn:
+      yield conn
