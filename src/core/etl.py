@@ -137,15 +137,15 @@ class CNPJ_ETL:
         # Create audits
         audits = create_audits(self.database, file_groups_info)
 
-        # # Test purpose only
-        # from os import getenv
-        # if getenv("ENVIRONMENT") == "development": 
-        #     audits = list(
-        #         filter(
-        #             lambda x: x.audi_file_size_bytes < 5000, 
-        #             sorted(audits, key=lambda x: x.audi_file_size_bytes)
-        #         )
-        #     )
+        # Test purpose only
+        from os import getenv
+        if getenv("ENVIRONMENT") == "development": 
+            audits = list(
+                filter(
+                    lambda x: x.audi_file_size_bytes < 5000, 
+                    sorted(audits, key=lambda x: x.audi_file_size_bytes)
+                )
+            )
         
         if audits:
             # Get data
