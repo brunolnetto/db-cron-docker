@@ -62,8 +62,6 @@ def init_database() -> Union[Database, None]:
         passw = getenv('POSTGRES_PASSWORD', 'postgres')
         database_name = getenv('POSTGRES_NAME')
         
-        # setup_database(host, port, sudo_user, sudo_pwd, user, passw, database_name )
-        
         # Connect to the database
         db_uri = f'postgresql://{user}:{passw}@{host}:{port}/{database_name}'
 
@@ -71,7 +69,7 @@ def init_database() -> Union[Database, None]:
         timeout=5*60*60 # 5 hours
         database_obj = create_database(db_uri, session_timeout=timeout)
 
-        # Create all tables defined using the Base class (if not already created)
+        # Create all tables defined using the Base class
         Base.metadata.create_all(database_obj.engine)
         
         logger.info('Connection to the database established!')
