@@ -74,7 +74,7 @@ ps: ## List the containers. Usage: make ps
 	docker ps -a
 
 prune: ## Remove all containers. Usage: make prune
-	docker system prune -a
+	docker system prune
 
 build: ## Build the containers. Usage: make build
 	docker-compose build
