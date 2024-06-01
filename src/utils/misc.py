@@ -7,33 +7,38 @@ from datetime import timedelta
 from os import makedirs
 import subprocess
 import re
-import requests
+from functools import wraps
+import time
 
 from setup.logging import logger
 
-def download_file(url, timeout=10, retries=3):
+def retry(attempts=3, delay=1, backoff_factor=2):
   """
-  Downloads a file from the specified URL with timeout and retry handling.
+  Retry decorator for persistent operations.
 
   Args:
-      url (str): The URL of the file to download.
-      timeout (int, optional): The connection timeout in seconds. Defaults to 10.
-      retries (int, optional): The number of retries on failure. Defaults to 3.
+      attempts (int, optional): Number of retry attempts. Defaults to 3.
+      delay (float, optional): Initial delay between retries in seconds. Defaults to 1.
+      backoff_factor (float, optional): Factor to multiply the delay by after each attempt. Defaults to 2.
 
   Returns:
-      bool: True if download is successful, False otherwise.
+      decorator: The retry decorator function.
   """
-  for attempt in range(retries + 1):
-    try:
-      response = requests.get(url, timeout=timeout)
-      response.raise_for_status()  # Raise exception for non-200 status codes
-      with open('filename.zip', 'wb') as f:  # Replace 'filename.zip' with desired name
-        f.write(response.content)
-      return True
-    except requests.exceptions.RequestException as e:
-      print(f"Download attempt {attempt} failed: {e}")
-  return False
-
+  def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+      for attempt in range(1, attempts + 1):
+        try:
+          return func(*args, **kwargs)
+        except Exception as e:
+          if attempt == attempts:
+            raise  # Re-raise the exception on the last attempt
+          logger.info(f"Attempt {attempt} failed. Retrying in {delay} seconds...")
+          time.sleep(delay)
+          delay *= backoff_factor
+      return None  # Should never reach here
+    return wrapper
+  return decorator
 
 def repeat_token(token: str, n: int):
     """
@@ -369,6 +374,15 @@ def get_date_range(timestamps):
       return min(timestamps), max(timestamps)
 
 def remove_folder(folder: str):
+    """
+    Removes a folder and all its contents.
+
+    Args:
+        folder (str): The path to the folder to remove.
+
+    Raises:
+        Exception: If an error occurs while deleting the folder.
+    """
     try:
         rmtree(folder)
     except Exception as e:
