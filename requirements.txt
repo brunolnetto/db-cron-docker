@@ -6,6 +6,6 @@ pydantic==2.7.1
 python-dotenv==1.0.1
 PyYAML==6.0.1
 requests==2.30.0
-ruff==0.4.5
+ruff==0.4.7
 sqlalchemy==2.0.30
 wget==3.2
