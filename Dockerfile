@@ -14,12 +14,6 @@ RUN pip install -r requirements.txt
 RUN apt-get update
 RUN apt-get -y install cron python3 python3-pip postgresql-client
 
-# Initialize the database
-COPY scripts/init_db.sh /app/init_db.sh
-COPY scripts/wait-for-db.sh /app/wait-for-db.sh
-RUN chmod +x /app/init_db.sh
-RUN chmod +x /app/wait-for-db.sh
-
 # Create the log directory
 RUN mkdir -p /app/logs
 
