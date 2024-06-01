@@ -7,7 +7,7 @@ from .schemas import Database
 DEFAULT_SESSION_TIMEOUT = 5*60*60
 
 # Create the database engine and session maker
-def create_database(uri, session_timeout: int = DEFAULT_SESSION_TIMEOUT):
+def create_database(uri):
     engine = create_engine(uri)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 

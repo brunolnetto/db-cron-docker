@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from os import getenv, makedirs, path
 from pythonjsonlogger import jsonlogger
 
-from utils.logging import clear_latest_items
+from src.utils.logging import clear_latest_items
 
 # Use the logger
 logger = logging.getLogger(__name__)

@@ -1,13 +1,13 @@
 version: "3.8"
 
 services:
-  crawler-db:
-    container_name: crawler-db
+  db-cron-task:
+    container_name: db-cron-task
     image: postgres:14
     restart: always
     env_file: .env
     networks:
-      - CNPJ_net
+      - cron_net
     expose:
       - "$POSTGRES_PORT"
     ports:
@@ -16,23 +16,24 @@ services:
     volumes:
       - ./data:/var/lib/postgresql/data_ 
 
-  crawler:
-    container_name: crawler
+  cron-task:
+    container_name: cron-task
     depends_on:
-      - crawler-db
+      - db-cron-task
     build: 
       context: .
       dockerfile: Dockerfile
     networks:
-      - CNPJ_net
+      - cron_net
     restart: unless-stopped
     volumes:
       - ./alembic/versions:/app/alembic/versions:ro
-      - .:/app  # Mount your project directory
-    command: bash -c "cd app && alembic upgrade head"  # Upgrade database schema on startup
+      - .:/app
+    working_dir: /app
+    command: bash -c "alembic upgrade head" 
 
 networks:
-  CNPJ_net:
+  cron_net:
 
 volumes:
   postgres_data:

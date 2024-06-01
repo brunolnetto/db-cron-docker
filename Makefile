@@ -54,7 +54,28 @@ minimal-requirements: ## Generates minimal requirements. Usage: make minimal-req
 	python3 scripts/clean_packages.py requirements.txt requirements.txt
 
 db-ip: ## Get the database IP. Usage: make db-ip
-	docker inspect crawler-db | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
+	docker inspect db-cron-task | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
+
+kill: ## Kill the database container. Usage: make kill-db
+	docker inspect db-cron-task | jq -r '.[0].State.Pid' | sudo xargs kill
+
+up: ## Start the containers. Usage: make up
+	docker-compose up -d
+
+down: ## Stop the containers. Usage: make down
+	docker-compose down
+
+ps: ## List the containers. Usage: make ps
+	docker ps -a
+
+prune: ## Remove all containers. Usage: make prune
+	docker system prune -a
+
+build: ## Build the containers. Usage: make build
+	docker-compose build
+
+log-cron: ## Show the logs of the crawler container. Usage: make log-cron
+	docker logs -f cron-task
 
 lint: ## perform inplace lint fixes
 	ruff check --fix .

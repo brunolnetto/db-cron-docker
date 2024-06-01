@@ -1,16 +1,44 @@
 from sys import stdout
 from os import path, remove, cpu_count, stat
-from zipfile import ZipFile
 from requests import head
 from shutil import rmtree
 from unicodedata import normalize
+from datetime import timedelta
 from os import makedirs
 import subprocess
 import re
-from tqdm import tqdm
-import wget
+from functools import wraps
+import time
 
 from setup.logging import logger
+
+def retry(attempts=3, delay=1, backoff_factor=2):
+  """
+  Retry decorator for persistent operations.
+
+  Args:
+      attempts (int, optional): Number of retry attempts. Defaults to 3.
+      delay (float, optional): Initial delay between retries in seconds. Defaults to 1.
+      backoff_factor (float, optional): Factor to multiply the delay by after each attempt. Defaults to 2.
+
+  Returns:
+      decorator: The retry decorator function.
+  """
+  def decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+      for attempt in range(1, attempts + 1):
+        try:
+          return func(*args, **kwargs)
+        except Exception as e:
+          if attempt == attempts:
+            raise  # Re-raise the exception on the last attempt
+          logger.info(f"Attempt {attempt} failed. Retrying in {delay} seconds...")
+          time.sleep(delay)
+          delay *= backoff_factor
+      return None  # Should never reach here
+    return wrapper
+  return decorator
 
 def repeat_token(token: str, n: int):
     """
@@ -175,7 +203,7 @@ def delete_var(var):
     """
     try:
         del var
-    except:
+    except Exception:
         pass
 
 def this_folder():
@@ -324,8 +352,6 @@ def normalize_filenames(filenames):
     
   return normalized_dict
 
-from datetime import timedelta
-
 
 def get_date_range(timestamps):
   """
@@ -348,6 +374,15 @@ def get_date_range(timestamps):
       return min(timestamps), max(timestamps)
 
 def remove_folder(folder: str):
+    """
+    Removes a folder and all its contents.
+
+    Args:
+        folder (str): The path to the folder to remove.
+
+    Raises:
+        Exception: If an error occurs while deleting the folder.
+    """
     try:
         rmtree(folder)
     except Exception as e:
