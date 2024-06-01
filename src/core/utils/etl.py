@@ -18,6 +18,7 @@ from utils.misc import (
 from utils.zip import extract_zip_file
 from core.constants import TABLES_INFO_DICT
 from setup.logging import logger 
+from constants import MAX_RETRIES
 
 # Tabelas
 tablename_list = [ table_name for table_name in TABLES_INFO_DICT.keys() ]
@@ -27,8 +28,6 @@ tablename_tuples = list(zip(tablename_list, trimmed_tablename_list))
 ####################################################################################################
 ## LER E INSERIR DADOS #############################################################################
 ####################################################################################################
-
-MAX_RETRIES = 3
 
 def download_this_zipfile(
     audit: AuditDB,
