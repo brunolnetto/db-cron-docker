@@ -1,5 +1,6 @@
 FROM python:3.9-slim-bullseye
 
+mkdir -p /app
 WORKDIR /app
 
 # Copy your application code
@@ -32,8 +33,7 @@ RUN crontab cron-config
 RUN touch /app/logs/cron.log
 
 # Run the command on container startup
-CMD /app/wait-for-db.sh && \
-    echo "starting" && \
+CMD echo "starting" && \
     echo "continuing" && \
     (cron) && \
     echo "tailing..." && \
