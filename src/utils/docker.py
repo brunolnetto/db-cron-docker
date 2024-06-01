@@ -2,7 +2,7 @@ from re import match
 from yaml import safe_load, YAMLError
 from os import environ
 
-from setup.logging import logger
+from src.setup.logging import logger
 
 def load_docker_compose_file(docker_compose_file="docker-compose.yaml"):
     """

@@ -4,11 +4,11 @@ from typing import Union
 from psycopg2 import OperationalError
 
 from setup.logging import logger
-from utils.misc import makedir 
 from database.models import Base
 from database.schemas import Database
 from database.engine import create_database
 from utils.docker import get_postgres_host
+from utils.misc import makedir 
 
 def get_sink_folder():
     """
@@ -36,6 +36,38 @@ def get_sink_folder():
     makedir(extract_folder)
     
     return output_folder, extract_folder
+
+def setup_database(database: Database) -> None:
+    # Get environment variables
+    # Get the host based on the environment
+    user = getenv('POSTGRES_USER', 'postgres')
+    passw = getenv('POSTGRES_PASSWORD', 'postgres')
+    database_name = getenv('POSTGRES_NAME')
+
+    # Create the database engine and session maker
+    setup_query=f"""
+    CREATE DATABASE {database_name} IF NOT EXISTS
+        WITH
+        OWNER = {user}
+        ENCODING = 'UTF8'
+        CONNECTION LIMIT = -1;
+
+    CREATE DATABASE "{database_name}_Test" IF NOT EXISTS
+        WITH
+        OWNER = "$POSTGRES_USER"
+        ENCODING = 'UTF8'
+        CONNECTION LIMIT = -1;
+
+    CREATE USER "{user}" WITH PASSWORD "{passw}";
+    GRANT pg_read_all_data, pg_write_all_data ON DATABASE "{name}_test" TO "{user}";
+    """
+
+    try:
+        with database.engine.connect() as conn:
+            conn.execute(setup_query)
+            logger.info('Database setup completed!')
+    except OperationalError as e:
+        logger.error(f"Error setting up database: {e}")
 
 def init_database() -> Union[Database, None]:
     """
