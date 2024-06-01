@@ -13,7 +13,7 @@ A cron task with database. This repository is intended for Linux users.
 7. Run `make up`;
 8. Run `make log-cron`;
 
-On step 7, you should see the following message:
+On step 7, you should see the following message after 5 minutes:
 
 ```   
 (...)
