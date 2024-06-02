@@ -1,6 +1,7 @@
 version: "3.8"
 
 services:
+
   db-cron-task:
     container_name: db-cron-task
     hostname: postgres

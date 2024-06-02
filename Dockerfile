@@ -5,6 +5,7 @@ WORKDIR /app
 
 # Copy your application code
 COPY .env .
+COPY src/ .
 
 # Install dependencies:
 COPY requirements.txt .
@@ -21,7 +22,7 @@ ENV PYTHONPATH=/app/src
 RUN mkdir -p /app/logs
 
 # Cron jobs
-RUN echo '* * * * * python3 /app/src/main.py >> /app/logs/cron.log 2>&1' > cron-config
+RUN echo '* * * * * python3 /app/src/db_cron/main.py >> /app/logs/cron.log 2>&1' > cron-config
 
 # Apply cron job
 RUN crontab cron-config
