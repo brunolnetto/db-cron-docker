@@ -21,7 +21,7 @@ class Database:
     self.engine = create_engine(uri)
     self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
   
-  def _setup(self) -> None:
+  def setup(self) -> None:
     """
     Sets up the database with the required tables and permissions.
 
@@ -68,9 +68,7 @@ class Database:
         # Create all tables defined using the Base class
         Base.metadata.create_all(self.engine)
         
-        logger.info('Connection to the database established!')
-        
-        self._setup()
+        logger.info('Connection to the database established!')        
     
     except OperationalError as e:
         logger.error(f"Error connecting to database: {e}")

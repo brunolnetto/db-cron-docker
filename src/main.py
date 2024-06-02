@@ -12,6 +12,7 @@ db_uri=get_database_uri()
 
 # Create the database object
 database=Database(db_uri)
+database.setup()
 database.init()
 
 logger.info('Hello world')
