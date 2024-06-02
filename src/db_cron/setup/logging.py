@@ -2,7 +2,7 @@ import logging
 import sys
 
 from datetime import datetime
-from os import getenv, makedirs, path
+from os import makedirs, path
 from pythonjsonlogger import jsonlogger
 
 from setup.settings import settings

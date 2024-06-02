@@ -1,6 +1,6 @@
 from sys import stdout
 from shutil import rmtree
-from os import makedirs
+from os import makedirs, path
 
 from setup.logging import logger
 
