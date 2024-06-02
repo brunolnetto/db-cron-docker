@@ -37,9 +37,9 @@ password=getenv('POSTGRES_PASSWORD')
 db_name=getenv('POSTGRES_NAME')
 
 # Get the host based on the environment
-if getenv('ENVIRONMENT') == 'docker':
-    host = get_postgres_host()
-else: 
+if getenv('ENVIRONMENT') == 'development':
+    host = getenv('POSTGRES_DOCKER_HOST', 'db-cron-task')
+else:
     host = getenv('POSTGRES_HOST', 'localhost')
 
 uri=URL(
