@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  db-cron-task:
+    container_name: db-cron-task
+    hostname: postgres
+    image: postgres:14
+    restart: always
+    env_file: .env
+    networks:
+      - cron_net
+    expose  :
+      - "$POSTGRES_PORT"
+    ports:
+      - "$POSTGRES_PORT:$POSTGRES_PORT"
+    command: postgres -c listen_addresses='*' -p $POSTGRES_PORT
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  cron-task:
+    image: cron-task
+    container_name: cron-task
+    depends_on:
+      - db-cron-task
+    build:
+      context: .
+      dockerfile: Dockerfile
+    networks:
+      - cron_net
+    restart: unless-stopped
+    volumes:
+      - ./alembic/versions:/app/alembic/versions:ro
+      - .:/app
+    working_dir: /app
+    command: bash -c "alembic revision --autogenerate -m 'Initial migration' && alembic upgrade head"
+
+networks:
+  cron_net:
+
+volumes:
+  postgres_data:
