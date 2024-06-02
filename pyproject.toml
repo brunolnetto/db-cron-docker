@@ -4,7 +4,8 @@ version = "0.1.0"
 description = "Receita Federal do Brasil - Dados Públicos CNPJ"
 authors = ["Aphonso Henrique do Amaral Rafael, @aphonsoar", "Bruno Peixoto <brunolnetto@gmail.com>"]
 readme = "README.md"
-packages = [{include = "poetry add _lock _d _path=\"requirements"}]
+packages = [ { include = "db_cron", from = "src" }]
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
