@@ -3,8 +3,7 @@ from os import path, getcwd, getenv
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import OperationalError
 
-from utils.docker import get_postgres_host
-from setup.logging import logger
+from src.setup.logging import logger
 
 def get_database_uri():
     """
@@ -18,7 +17,7 @@ def get_database_uri():
 
     # Get the host based on the environment
     if getenv('ENVIRONMENT') == 'docker':
-        host = get_postgres_host()
+        host = getenv('POSTGRES_DOCKER_HOST', 'db-cron-task')
     else: 
         host = getenv('POSTGRES_HOST', 'localhost')
 
@@ -27,7 +26,7 @@ def get_database_uri():
         port = int(getenv('POSTGRES_PORT', '5432'))
         user = getenv('POSTGRES_USER', 'postgres')
         passw = getenv('POSTGRES_PASSWORD', 'postgres')
-        database_name = getenv('POSTGRES_NAME')
+        database_name = getenv('POSTGRES_DBNAME')
         
         return URL(
             drivername='postgresql',
