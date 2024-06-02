@@ -1,13 +1,10 @@
 from logging.config import fileConfig
-from os import getenv, path, getcwd
-from dotenv import load_dotenv
 from alembic import context
-from sqlalchemy.engine.url import URL
-
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
+
+from src.setup.config import get_database_uri
 from src.database.models import Base
-from src.utils.docker import get_postgres_host
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -27,30 +24,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-env_path = path.join(getcwd(), '.env')
-load_dotenv()
-
-host=getenv('POSTGRES_HOST')
-port=getenv('POSTGRES_PORT')
-user=getenv('POSTGRES_USER')
-password=getenv('POSTGRES_PASSWORD')
-db_name=getenv('POSTGRES_NAME')
-
-# Get the host based on the environment
-if getenv('ENVIRONMENT') == 'docker':
-    host = get_postgres_host()
-else: 
-    host = getenv('POSTGRES_HOST', 'localhost')
-
-uri=URL(
-    drivername='postgresql',
-    username=user,
-    password=password,
-    host=host,
-    port=port,
-    database=db_name,
-    query={ 'client_encoding': 'utf8' }
-)
+uri = get_database_uri()
 
 config.attributes['sqlalchemy.url'] = uri
 

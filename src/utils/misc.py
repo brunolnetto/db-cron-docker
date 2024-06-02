@@ -30,7 +30,7 @@ def retry(attempts=3, delay=1, backoff_factor=2):
       for attempt in range(1, attempts + 1):
         try:
           return func(*args, **kwargs)
-        except Exception as e:
+        except Exception:
           if attempt == attempts:
             raise  # Re-raise the exception on the last attempt
           logger.info(f"Attempt {attempt} failed. Retrying in {delay} seconds...")
