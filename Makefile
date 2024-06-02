@@ -64,7 +64,16 @@ kill-db: ## Kill the database container. Usage: make kill-db
 	$(MAKE) kill-container container=db-cron-task
 
 kill-cron: ## Kill the database container. Usage: make kill-db
-	$(MAKE) kill-container container=db-cron-task
+	$(MAKE) kill-container container=cron-task
+
+log-container: ## Show the logs of the  container. Usage: make log-cron
+	docker logs -f $(container)
+
+log-db: ## Show the logs of the db-cron-task container. Usage: make log-cron
+	$(MAKE) log-container container=db-cron-task
+
+log-cron: ## Show the logs of the cron-task container. Usage: make log-cron
+	$(MAKE) log-container container=cron-task
 
 kill: kill-db kill-cron ## Kill the database and cron containers. Usage: make kill
 
@@ -86,9 +95,6 @@ prune: ## Remove all containers. Usage: make prune
 
 build: ## Build the containers. Usage: make build
 	docker-compose build
-
-log-cron: ## Show the logs of the crawler container. Usage: make log-cron
-	docker logs -f cron-task
 
 lint: ## perform inplace lint fixes
 	ruff check --fix .
