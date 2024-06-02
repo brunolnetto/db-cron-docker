@@ -10,6 +10,7 @@ from database.engine import create_database
 from utils.docker import get_postgres_host
 from utils.misc import makedir
 
+
 def get_sink_folder():
     """
     Get the output and extracted file paths based on the environment variables or default paths.
@@ -110,4 +111,3 @@ def init_database() -> Union[Database, None]:
     except OperationalError as e:
         logger.error(f"Error connecting to database: {e}")
         return None
-
