@@ -57,13 +57,20 @@ minimal-requirements: ## Generates minimal requirements. Usage: make minimal-req
 db-ip: ## Get the database IP. Usage: make db-ip
 	docker inspect db-cron-task | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
 
+kill-container: ## Kill the database container. Usage: make kill-db
+	docker inspect $(container) | jq -r '.[0].State.Pid' | sudo xargs kill
+
 kill-db: ## Kill the database container. Usage: make kill-db
-	docker inspect db-cron-task | jq -r '.[0].State.Pid' | sudo xargs kill
+	$(MAKE) kill-container container=db-cron-task
 
 kill-cron: ## Kill the database container. Usage: make kill-db
-	docker inspect cron-task | jq -r '.[0].State.Pid' | sudo xargs kill
+	$(MAKE) kill-container container=db-cron-task
 
 kill: kill-db kill-cron ## Kill the database and cron containers. Usage: make kill
+
+migrations: ## Create the migrations. Usage: make migrations
+	alembic revision --autogenerate -m "Create a baseline migrations"
+	alembic upgrade head
 
 up: ## Start the containers. Usage: make up
 	docker-compose up -d
