@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from datetime import datetime
 
-from src.database.models import UserDB
+from db_cron.database.models import UserDB
 
 def db_client_data():
     data={

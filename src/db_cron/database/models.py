@@ -26,8 +26,8 @@ class UserDB(Base):
     SQLAlchemy model for the user table.
     """
     __tablename__ = 'users'
-
-    id = Column(Integer, primary_key=True)
+    
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String, nullable=False)
     email = Column(String, nullable=False)
     password = Column(String, nullable=False)
