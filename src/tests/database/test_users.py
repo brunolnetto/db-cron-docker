@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
 from tests.conftest import engine
-from database.models import UserDB
+from src.db_cron.database.models import UserDB
 
 Session = sessionmaker(bind=engine)
 
