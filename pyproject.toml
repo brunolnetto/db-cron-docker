@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "poetry add -lock -d -path=\"requirements-txt\""
+name = "db-cron"
 version = "0.1.0"
 description = "Receita Federal do Brasil - Dados Públicos CNPJ"
 authors = ["Aphonso Henrique do Amaral Rafael, @aphonsoar", "Bruno Peixoto <brunolnetto@gmail.com>"]
