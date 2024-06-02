@@ -9,7 +9,7 @@ def db_client_data():
         'POSTGRES_USER': 'myuser',
         'POSTGRES_PASSWORD': 'mypassword',
         'POSTGRES_HOST': 'localhost',
-        'POSTGRES_PORT': 5432,
+        'POSTGRES_PORT': 5433,  
         'POSTGRES_DBNAME': 'mydb',
     }
     

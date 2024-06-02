@@ -1,11 +1,9 @@
 from sqlalchemy import (
-  Column, Integer, String, TIMESTAMP, JSON
+  Column, Integer, String, TIMESTAMP
 )
-from sqlalchemy.dialects.postgresql import UUID
 from typing import Generic, TypeVar
 from pydantic import BaseModel, Field
 from datetime import datetime
-from sqlalchemy.schema import ForeignKey
 
 from sqlalchemy.ext.declarative import declarative_base
 

@@ -43,6 +43,8 @@ class Settings(BaseSettings):
     POSTGRES_PASSWORD: str = DEFAULT_PASSWORD
     POSTGRES_DBNAME: str = ""
 
+    LOG_FILES_HORIZON: int = 5
+
     def _check_default_postgres_password(self, var_name: str, value: Union[str, None]) -> None:
         if value == DEFAULT_PASSWORD:
             message = (

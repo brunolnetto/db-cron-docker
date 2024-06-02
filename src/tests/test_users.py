@@ -1,10 +1,9 @@
-from sqlalchemy import create_engine
 from sqlalchemy.sql import select
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 
-from conftest import engine
-from db_cron.database.models import UserDB
+from tests.conftest import engine
+from database.models import UserDB
 
 Session = sessionmaker(bind=engine)
 

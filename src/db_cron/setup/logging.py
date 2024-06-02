@@ -2,10 +2,10 @@ import logging
 import sys
 
 from datetime import datetime
-from dotenv import load_dotenv
 from os import getenv, makedirs, path
 from pythonjsonlogger import jsonlogger
 
+from setup.settings import settings
 from utils.logging import clear_latest_items
 
 # Use the logger
@@ -13,8 +13,7 @@ logger = logging.getLogger(__name__)
 
 # Configure logging with a single handler
 # Set the overall logging level
-load_dotenv()
-ENVIRONMENT = getenv('ENVIRONMENT', 'development')
+ENVIRONMENT = settings.ENVIRONMENT
 
 fields = [
     "threadName",
@@ -67,7 +66,7 @@ time_str = datetime.now().strftime("%H_%M")
 log_root_path = f'logs/{date_str}'
 
 # Clear the latest 5 files (adjust 'n' as needed)
-LOG_FILES_HORIZON = int(getenv('LOG_FILES_HORIZON', 5))
+LOG_FILES_HORIZON = settings.LOG_FILES_HORIZON
 if path.exists(log_root_path):
     clear_latest_items(log_root_path, LOG_FILES_HORIZON)
 

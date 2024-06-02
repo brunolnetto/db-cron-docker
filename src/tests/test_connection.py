@@ -1,7 +1,6 @@
-from sqlalchemy import create_engine
 from sqlalchemy.sql import text
 
-from conftest import engine
+from tests.conftest import engine
 
 ## To run this script, you need to have a PostgreSQL server running. 
 # docker run --rm -d --name postgres -e POSTGRES_USER=myuser -e POSTGRES_PASSWORD=mypassword -p 5432:5432 postgres

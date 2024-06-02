@@ -1,4 +1,3 @@
-from os import getenv
 from psycopg2 import OperationalError
 from sqlalchemy import create_engine
 from sqlalchemy.pool import QueuePool
@@ -8,8 +7,8 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy_utils import database_exists, create_database
 
 from setup.logging import logger
-from database.models import Base
 from setup.settings import settings
+from database.models import Base
 
 class Database:
   """
@@ -69,7 +68,7 @@ class Database:
     Connects to a PostgreSQL database using environment variables for connection details.
 
     Returns:
-        Database: A NamedTuple with engine and conn attributes for the database connection.
+        Database: A class with engine and conn attributes for the database connection.
         None: If there was an error connecting to the database.
     
     """
