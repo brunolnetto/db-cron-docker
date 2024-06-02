@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 from os import getenv, makedirs, path
 from pythonjsonlogger import jsonlogger
 
-from src.utils.logging import clear_latest_items
+from utils.logging import clear_latest_items
 
 # Use the logger
 logger = logging.getLogger(__name__)
@@ -41,7 +41,7 @@ fields = [
 logging_format=" ".join(map(lambda field_name: f"%({field_name})s", fields))
 fmt = jsonlogger.JsonFormatter(logging_format)
 
-if ENVIRONMENT == 'development':
+if ENVIRONMENT == 'development' or ENVIRONMENT == 'docker':
     # Create a handler for stdout and stderr
     stdout_stream_handler=logging.StreamHandler(sys.stdout)
     stderr_stream_handler=logging.StreamHandler(sys.stderr)

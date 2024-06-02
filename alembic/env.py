@@ -1,10 +1,9 @@
 from logging.config import fileConfig
 from alembic import context
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
 
-from src.setup.config import get_database_uri
 from src.database.models import Base
+from src.database.schemas import Database
+from src.setup.settings import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -24,12 +23,28 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-uri = get_database_uri()
+
+# Get environment variables
+if settings.ENVIRONMENT == 'docker':
+    host = settings.POSTGRES_DOCKER_HOST
+else:
+    host = settings.POSTGRES_HOST
+
+port = settings.POSTGRES_PORT
+user = settings.POSTGRES_USER
+passw = settings.POSTGRES_PASSWORD
+database_name = settings.POSTGRES_DBNAME
+
+# Connect to the database
+uri = f'postgresql://postgres:postgres@{host}:{port}'
+
+database = Database(uri)
 
 config.attributes['sqlalchemy.url'] = uri
 
 def run_migrations_offline() -> None:
-    """Run migrations in 'offline' mode.
+    """
+    Run migrations in 'offline' mode.
 
     This configures the context with just a URL
     and not an Engine, though an Engine is acceptable
@@ -40,13 +55,16 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=uri,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
+
+    # Create the database
+    database.setup()
+    database.init()
 
     with context.begin_transaction():
         context.run_migrations()
@@ -59,17 +77,13 @@ def run_migrations_online() -> None:
     and associate a connection with the context.
 
     """
-    connectable = engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
-        poolclass=pool.NullPool,
-        url=uri
-    )
+    connectable = database.engine
 
     with connectable.connect() as connection:
-        context.configure(
-            connection=connection, target_metadata=target_metadata
-        )
+        context.configure(connection=connection, target_metadata=target_metadata)
+
+        database.setup()
+        database.init()
 
         with context.begin_transaction():
             context.run_migrations()

@@ -1,16 +1,8 @@
 from os import getenv, path, getcwd
 from dotenv import load_dotenv
-from typing import Union
-from psycopg2 import OperationalError
 
-from setup.logging import logger
-from database.models import Base
-from database.schemas import Database
-from database.engine import create_database
-from utils.docker import get_postgres_host
-from utils.misc import makedir
-
-
+from src.utils.misc import makedir
+    
 def get_sink_folder():
     """
     Get the output and extracted file paths based on the environment variables or default paths.

@@ -3,7 +3,7 @@ from os import path, getcwd, getenv
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import OperationalError
 
-from src.setup.logging import logger
+from setup.logging import logger
 
 def get_database_uri():
     """

@@ -14,6 +14,9 @@ RUN pip install -r requirements.txt
 RUN apt-get update
 RUN apt-get -y install cron python3 python3-pip postgresql-client
 
+# Set the PYTHONPATH to include the src directory
+ENV PYTHONPATH=/app/src
+
 # Create the log directory
 RUN mkdir -p /app/logs
 

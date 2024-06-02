@@ -1,12 +1,14 @@
 from os import getenv
 from psycopg2 import OperationalError
 from sqlalchemy import create_engine
+from sqlalchemy.pool import QueuePool
+from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-from dotenv import load_dotenv
 
-from setup.logging import logger
-from database.models import Base
+from src.setup.logging import logger
+from src.database.models import Base
+from src.setup.settings import settings
 
 class Database:
   """
@@ -18,7 +20,12 @@ class Database:
   """
   def __init__(self, uri: URL):
     self.uri = uri
-    self.engine = create_engine(uri)
+    self.engine = create_engine(
+        uri,
+        poolclass=QueuePool,
+        pool_size=20,     # Adjust pool size as needed
+        max_overflow=10,  # Adjust max overflow as needed
+    ) 
     self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
   
   def setup(self) -> None:
@@ -28,29 +35,26 @@ class Database:
     Returns:
         None: If the database setup was successful.
     """
-    load_dotenv()
-
-    # Get environment variables
-    # Get the host based on the environment
-    user = getenv('POSTGRES_USER', 'postgres')
-    passw = getenv('POSTGRES_PASSWORD', 'postgres')
-    database_name = getenv('POSTGRES_DBNAME')
+    database_name=settings.POSTGRES_DBNAME
+    user=settings.POSTGRES_USER
+    passw=settings.POSTGRES_PASSWORD
 
     # Create the database engine and session maker
-    setup_query=f"""
-    CREATE DATABASE {database_name} IF NOT EXISTS
+    setup_query=text(f"""
+    CREATE DATABASE {database_name}
         WITH
-        OWNER = {user}
+        OWNER = postgres
         ENCODING = 'UTF8'
         CONNECTION LIMIT = -1;
 
-    CREATE USER "{user}" WITH PASSWORD "{passw}";
-    GRANT pg_read_all_data, pg_write_all_data ON DATABASE "{database_name}" TO "{user}";
-    """
+    CREATE USER {user} WITH PASSWORD '{passw}';
+    GRANT pg_read_all_data, pg_write_all_data ON DATABASE {database_name} TO {user};
+    """)
 
     try:
         with self.engine.connect() as conn:
-            conn.execute(setup_query)
+            conn.execution_options(isolation_level="AUTOCOMMIT")\
+                .execute(setup_query)
             logger.info('Database setup completed!')
     except OperationalError as e:
         logger.error(f"Error setting up database: {e}")
@@ -67,7 +71,6 @@ class Database:
     try:
         # Create all tables defined using the Base class
         Base.metadata.create_all(self.engine)
-        
         logger.info('Connection to the database established!')        
     
     except OperationalError as e:
@@ -83,3 +86,6 @@ class Database:
     """
     with self.engine.connect() as conn:
       yield conn
+
+  def __repr__(self) -> str:
+     return f"Database(uri={self.uri})" 
