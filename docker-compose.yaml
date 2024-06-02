@@ -18,6 +18,7 @@ services:
       - ./data:/var/lib/postgresql/data
 
   cron-task:
+    image: cron-task
     container_name: cron-task
     depends_on:
       - db-cron-task

@@ -4,14 +4,13 @@
 """
 
 from setup.logging import logger
-from database.utils.uri import get_database_uri
+from src.database.utils import get_database_uri
 from database.schemas import Database
 
 # Get the database URI
 db_uri=get_database_uri()
 print(db_uri)
 
-# 
 # # Create the database object
 # database=Database(db_uri)
 # database.setup()

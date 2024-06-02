@@ -5,6 +5,7 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
+from sqlalchemy_utils import database_exists, create_database
 
 from src.setup.logging import logger
 from src.database.models import Base
@@ -20,12 +21,17 @@ class Database:
   """
   def __init__(self, uri: URL):
     self.uri = uri
+
     self.engine = create_engine(
-        uri,
-        poolclass=QueuePool,
-        pool_size=20,     # Adjust pool size as needed
-        max_overflow=10,  # Adjust max overflow as needed
+        uri, poolclass=QueuePool, pool_size=20, max_overflow=10,
     ) 
+
+    if not database_exists(self.engine.url):
+         create_database(self.engine.url)
+         logger.info("New Database Created" + database_exists(self.engine.url)) 
+    else:
+        logger.info("Database Already Exists")
+
     self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
   
   def setup(self) -> None:
@@ -53,8 +59,7 @@ class Database:
 
     try:
         with self.engine.connect() as conn:
-            conn.execution_options(isolation_level="AUTOCOMMIT")\
-                .execute(setup_query)
+            conn.execute(setup_query)
             logger.info('Database setup completed!')
     except OperationalError as e:
         logger.error(f"Error setting up database: {e}")

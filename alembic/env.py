@@ -23,21 +23,7 @@ target_metadata = Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
-# Get environment variables
-if settings.ENVIRONMENT == 'docker':
-    host = settings.POSTGRES_DOCKER_HOST
-else:
-    host = settings.POSTGRES_HOST
-
-port = settings.POSTGRES_PORT
-user = settings.POSTGRES_USER
-passw = settings.POSTGRES_PASSWORD
-database_name = settings.POSTGRES_DBNAME
-
-# Connect to the database
-uri = f'postgresql://postgres:postgres@{host}:{port}'
-
+uri=settings.SQLALCHEMY_DATABASE_URI
 database = Database(uri)
 
 config.attributes['sqlalchemy.url'] = uri
@@ -62,10 +48,6 @@ def run_migrations_offline() -> None:
         dialect_opts={"paramstyle": "named"},
     )
 
-    # Create the database
-    database.setup()
-    database.init()
-
     with context.begin_transaction():
         context.run_migrations()
 
@@ -81,9 +63,6 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
-
-        database.setup()
-        database.init()
 
         with context.begin_transaction():
             context.run_migrations()

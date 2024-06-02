@@ -35,6 +35,7 @@ env: ## Creates a virtual environment. Usage: make env
 	virtualenv .venv
 
 install: ## Installs the python requirements. Usage: make install
+	pip install uv
 	uv pip install -r requirements.txt
 
 search: ## Searchs for a token in the code. Usage: make search token=your_token

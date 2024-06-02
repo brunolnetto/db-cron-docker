@@ -114,4 +114,4 @@ if __name__ == "__main__":
 
     os.remove(tmp_file)
 
-    print(f"We removed {package_count_after-package_count_before} packages.")
+    print(f"We removed {package_count_before-package_count_after} packages.")

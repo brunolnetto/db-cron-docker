@@ -15,7 +15,7 @@ import toml
 
 # Default database values
 DEFAULT_PASSWORD = "changethis"
-POSTGRES_DSN_SCHEME = "postgresql+psycopg"
+POSTGRES_DSN_SCHEME = "postgresql+psycopg2"
 
 # Project settings
 with open("pyproject.toml", "r") as f:
@@ -26,7 +26,9 @@ class Settings(BaseSettings):
     """App settings."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", env_ignore_empty=True, extra="ignore"
+        env_file=".env", 
+        env_ignore_empty=True, 
+        extra="ignore"
     )
 
     VERSION: str = config["tool"]["poetry"]["version"]
@@ -56,12 +58,13 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
+        host=self.POSTGRES_DOCKER_HOST if self.ENVIRONMENT == "docker" else self.POSTGRES_HOST
         return str(
             MultiHostUrl.build(
                 scheme=POSTGRES_DSN_SCHEME,
                 username=self.POSTGRES_USER,
                 password=self.POSTGRES_PASSWORD,
-                host=self.POSTGRES_HOST,
+                host=host,
                 port=self.POSTGRES_PORT,
                 path=self.POSTGRES_DBNAME,
             )
