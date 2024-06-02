@@ -7,9 +7,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 from sqlalchemy_utils import database_exists, create_database
 
-from src.setup.logging import logger
-from src.database.models import Base
-from src.setup.settings import settings
+from setup.logging import logger
+from database.models import Base
+from setup.settings import settings
 
 class Database:
   """

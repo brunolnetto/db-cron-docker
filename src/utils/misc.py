@@ -2,7 +2,7 @@ from sys import stdout
 from shutil import rmtree
 from os import makedirs
 
-from src.setup.logging import logger
+from setup.logging import logger
 
 def repeat_token(token: str, n: int):
     """

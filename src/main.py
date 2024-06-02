@@ -4,7 +4,7 @@
 """
 
 from setup.logging import logger
-from src.database.utils import get_database_uri
+from database.utils import get_database_uri
 from database.schemas import Database
 
 # Get the database URI

@@ -34,20 +34,13 @@ class UserDB(Base):
     created_at = Column(TIMESTAMP, nullable=False)
     updated_at = Column(TIMESTAMP, nullable=False)
 
-class MessageDBSchema(BaseModel, Generic[T]):
-    id: int = Field(..., description="Unique identifier for the message.")
-    user_id: int = Field(..., description="The user associated with the message.")    
-    message: str = Field(..., description="Table name associated with the message.")
-
-class MessageDB(Base):
-    """
-    SQLAlchemy model for the audit table.
-    """
-    __tablename__ = 'messages'
-
-    id = Column(UUID(as_uuid=True), primary_key=True)
-    user_id = ForeignKey('users.id')
-    message = Column(TIMESTAMP, nullable=True)
-    created_at = Column(TIMESTAMP, nullable=False)
-    
+    def __get_pydantic_core_schema__(self):
+        return UserDBSchema(
+            id=self.id,
+            username=self.username,
+            email=self.email,
+            password=self.password,
+            created_at=self.created_at,
+            updated_at=self.updated_at
+        )
     
