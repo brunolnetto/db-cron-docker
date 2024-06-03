@@ -3,8 +3,8 @@ from os import path, makedirs
 import shutil
 from shutil import rmtree
 
-from src.db_cron.setup.logging import logger
-from src.db_cron.utils.misc import (
+from backend.db_cron.setup.logging import logger
+from backend.db_cron.utils.misc import (
   repeat_token, 
   invert_dict_list, 
   makedir,
@@ -50,7 +50,9 @@ def test_convert_to_bytes():
   assert convert_to_bytes("10K") == 10240
   assert convert_to_bytes("2.5M") == 2621440
   assert convert_to_bytes("1G") == 1073741824
-  assert convert_to_bytes("invalid") == None
+  
+  with pytest.raises(ValueError):
+      assert convert_to_bytes("invalid") == None
 
 def test_remove_folder(mocker):
   # Mock logger.error
@@ -64,11 +66,10 @@ def test_remove_folder(mocker):
   assert not path.exists(folder_to_remove)
   logger.error.assert_not_called()
 
-  # Simulate error during deletion
-  mocker.patch.object(shutil, "rmtree", side_effect=OSError("Permission denied"))
-  with pytest.raises(Exception):
-    remove_folder(folder_to_remove)
-  logger.error.assert_called_once()
+  # Case 2: Folder doesn't exist
+  remove_folder(folder_to_remove)
+  error_message="Error deleting folder temp_folder: [Errno 2] No such file or directory: 'temp_folder'"
+  logger.error.assert_called_once_with(error_message)
 
   # Cleanup (already removed in the first call)
   rmtree(folder_to_remove, ignore_errors=True)

@@ -3,7 +3,7 @@
   - Objetivo        : Baixar, transformar e carregar dados da Receita Federal do Brasil
 """
 
-from setup.logging import logger
+from backend.db_cron.setup.logging import logger
 
 # # Get the database URI
 # db_uri=get_database_uri()

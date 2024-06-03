@@ -4,13 +4,13 @@ WORKDIR /app
 
 # Copy your application code
 COPY .env .
-COPY src/ .
+COPY backend/ .
 COPY scripts/ .
 
 # Set env variables
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH="/code"
+    PYTHONPATH="/backend"
 
 # Install dependencies:
 COPY requirements.txt .

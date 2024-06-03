@@ -5,8 +5,8 @@ from datetime import datetime
 from os import makedirs, path
 from pythonjsonlogger import jsonlogger
 
-from setup.settings import settings
-from utils.logging import clear_latest_items
+from backend.db_cron.setup.settings import settings
+from backend.db_cron.utils.logging import clear_latest_items
 
 # Use the logger
 logger = logging.getLogger(__name__)
