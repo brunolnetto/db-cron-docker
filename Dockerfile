@@ -9,7 +9,7 @@ COPY src/ .
 
 # Install dependencies:
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Install the required packages
 RUN apt-get update
