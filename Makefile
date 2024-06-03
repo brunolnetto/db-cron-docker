@@ -81,11 +81,25 @@ migrations: ## Create the migrations. Usage: make migrations
 	alembic revision --autogenerate -m "Create a baseline migrations"
 	alembic upgrade head
 
+exec: ## Execute a command in the container. Usage: make exec command="ls -la"
+	docker exec -it $(container) $(command)
+
+bash: ## Execute a bash in the container. Usage: make bash
+	$(MAKE) exec container=$(container) command="bash"
+
+bash-cron: ## Execute a bash in the cron-task container. Usage: make bash-cron
+	$(MAKE) bash container=cron-task
+
+bash-db: ## Execute a bash in the db-cron-task container. Usage: make bash-db
+	$(MAKE) bash container=db-cron-task
+
 up: ## Start the containers. Usage: make up
 	docker-compose up -d
 
 down: ## Stop the containers. Usage: make down
 	docker-compose down
+
+restart: down build up ## Restart the containers. Usage: make restart
 
 ps: ## List the containers. Usage: make ps
 	docker ps -a
