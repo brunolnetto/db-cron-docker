@@ -1,39 +1,38 @@
-FROM python:3.12-slim-bullseye
+# Stage 1: Install dependencies
+FROM python:3.9-slim-bullseye AS builder
 
-RUN mkdir -p /app
 WORKDIR /app
+
+# Install uv
+COPY requirements.txt .
+RUN pip3 install uv virtualenv
+RUN uv pip3 install -r requirements.txt --system
+
+# Install the required packages
+RUN apt-get update && apt-get -y upgrade
+RUN apt-get -y --fix-missing install cron python3 python3-pip postgresql-client
 
 # Copy your application code
 COPY .env .
-COPY src/ .
-
-# Install dependencies:
-COPY requirements.txt .
-RUN pip3 install -r requirements.txt
-
-# Install the required packages
-RUN apt-get update
-RUN apt-get -y install cron python3 python3-pip postgresql-client
-
-# Set the PYTHONPATH to include the src directory
-ENV PYTHONPATH=/app/src
-
-# Create the log directory
-RUN mkdir -p /app/logs
+COPY backend/ .
+COPY scripts/ .
 
 # Cron jobs
-RUN echo '* * * * * python3 /app/src/db_cron/main.py >> /app/logs/cron.log 2>&1' > cron-config
+RUN echo '* * * * * bash /app/scripts/cron_task.sh >> /var/log/cron.log 2>&1' > cron-config
+
+# Give execution rights on the cron job
+RUN chmod 0644 cron-config
 
 # Apply cron job
 RUN crontab cron-config
 
 # Create the log file to be able to run tail
-RUN touch /app/logs/cron.log
+RUN touch /var/log/cron.log
 
 # Run the command on container startup
 CMD echo "starting" && \
     echo "continuing" && \
     (cron) && \
     echo "tailing..." && \
-    : >> /app/logs/cron.log && \
-    tail -f /app/logs/cron.log
+    : >> /var/log/cron.log && \
+    tail -f /var/log/cron.log

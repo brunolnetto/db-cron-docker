@@ -66,14 +66,14 @@ kill-db: ## Kill the database container. Usage: make kill-db
 kill-cron: ## Kill the database container. Usage: make kill-db
 	$(MAKE) kill-container container=cron-task
 
-log-container: ## Show the logs of the  container. Usage: make log-cron
+logs: ## Show the logs of the  container. Usage: make log-cron
 	docker logs -f $(container)
 
-log-db: ## Show the logs of the db-cron-task container. Usage: make log-cron
-	$(MAKE) log-container container=db-cron-task
+logs-db: ## Show the logs of the db-cron-task container. Usage: make log-cron
+	$(MAKE) logs container="db-cron-task"
 
-log-cron: ## Show the logs of the cron-task container. Usage: make log-cron
-	$(MAKE) log-container container=cron-task
+logs-cron: ## Show the logs of the cron-task container. Usage: make log-cron
+	$(MAKE) logs container="cron-task"
 
 kill: kill-db kill-cron ## Kill the database and cron containers. Usage: make kill
 
@@ -81,11 +81,34 @@ migrations: ## Create the migrations. Usage: make migrations
 	alembic revision --autogenerate -m "Create a baseline migrations"
 	alembic upgrade head
 
+exec: ## Execute a command in the container. Usage: make exec container="cron-task" command="ls -la"
+	docker exec -it $(container) $(command)
+
+ls: ## Execute a bash in the container. Usage: make bash
+	$(MAKE) exec container=$(container) command="ls -la"
+
+ls-cron: ## Execute a bash in the container. Usage: make bash
+	$(MAKE) ls container='cron-task'
+
+bash: ## Execute a bash in the container. Usage: make bash
+	$(MAKE) exec container=$(container) command="/bin/bash"
+
+bash-cron: ## Execute a bash in the cron-task container. Usage: make bash-cron
+	$(MAKE) bash container=cron-task
+
+bash-db: ## Execute a bash in the db-cron-task container. Usage: make bash-db
+	$(MAKE) bash container=db-cron-task
+
+test: ## Run the tests. Usage: make test
+	pytest -v --cov=backend --cov-report=term-missing --cov-fail-under=100 --cov-config=.coveragerc backend/tests
+
 up: ## Start the containers. Usage: make up
 	docker-compose up -d
 
 down: ## Stop the containers. Usage: make down
 	docker-compose down
+
+restart: down build up ## Restart the containers. Usage: make restart
 
 ps: ## List the containers. Usage: make ps
 	docker ps -a

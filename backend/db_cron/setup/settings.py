@@ -7,6 +7,7 @@ from pydantic import (
     PostgresDsn,
     computed_field,
 )
+import os
 
 from typing import Union
 
@@ -17,8 +18,12 @@ import toml
 DEFAULT_PASSWORD = "changethis"
 POSTGRES_DSN_SCHEME = "postgresql+psycopg2"
 
-# Project settings
-with open("pyproject.toml", "r") as f:
+# Project settings 
+toml_file = "pyproject.toml"
+current_folder = os.path.dirname(__file__)
+tom_path=os.path.join(current_folder, '..', '..', '..', toml_file)
+
+with open(tom_path, "r") as f:
     config = toml.load(f)
 
 # Settings class

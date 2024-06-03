@@ -78,28 +78,28 @@ def update_progress(index, total, message):
     stdout.flush()
 
 def convert_to_bytes(size_str):
-  """
-  This function converts a size string (e.g., "22K", "321M") into bytes.
+    """
+    This function converts a size string (e.g., "22K", "321M") into bytes.
 
-  Args:
-      size_str (str): The size string to convert.
+    Args:
+        size_str (str): The size string to convert.
 
-  Returns:
-      int: The size in bytes, or None if the format is invalid.
-  """
-  size_value = float(size_str[:-1])  # Extract numerical value
-  size_unit = size_str[-1].upper()  # Get the unit (K, M, G)
+    Returns:
+        int: The size in bytes, or None if the format is invalid.
+    """
+    size_value = float(size_str[:-1])  # Extract numerical value
+    size_unit = size_str[-1].upper()  # Get the unit
 
-  unit_multiplier = {
-      'K': 1024,
-      'M': 1024 * 1024,
-      'G': 1024 * 1024 * 1024
-  }
+    unit_multiplier = {
+        'K': 1024,
+        'M': 1024 * 1024,
+        'G': 1024 * 1024 * 1024
+    }
 
-  if size_unit in unit_multiplier:
-    return int(size_value * unit_multiplier[size_unit])
-  else:
-    return None  # Handle invalid units
+    if size_unit in unit_multiplier:
+        return int(size_value * unit_multiplier[size_unit])
+    else:
+        return None  # Handle invalid units
 
 def remove_folder(folder: str):
     """

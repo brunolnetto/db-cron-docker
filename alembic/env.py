@@ -1,9 +1,9 @@
 from logging.config import fileConfig
 from alembic import context
 
-from src.db_cron.database.models import Base
-from src.db_cron.database.schemas import Database
-from src.db_cron.setup.settings import settings
+from backend.db_cron.database.models import Base
+from backend.db_cron.database.schemas import Database
+from backend.db_cron.setup.settings import settings
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
