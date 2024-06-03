@@ -6,9 +6,9 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 from sqlalchemy_utils import database_exists, create_database
 
-from backend.db_cron.setup.logging import logger
-from backend.db_cron.setup.settings import settings
-from backend.db_cron.database.models import Base
+from setup.logging import logger
+from setup.settings import settings
+from database.models import Base
 
 class Database:
     """

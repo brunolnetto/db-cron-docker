@@ -1,6 +1,8 @@
 #/bin/bash
 # This script is used to run the cron task
 
-# alembic revision --autogenerate -m 'Initial migration' && alembic upgrade head
-python3 /app/src/db_cron/main.py
-# echo "Cron task is running" 
+pip install -r /app/requirements.txt
+
+echo "Cron task is running" 
+python3 /app/backend/db_cron/main.py
+

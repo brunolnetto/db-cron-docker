@@ -1,27 +1,23 @@
-FROM python:3.12-slim-bullseye
+# Stage 1: Install dependencies
+FROM python:3.9-slim-bullseye AS builder
 
 WORKDIR /app
-
-# Copy your application code
-COPY .env .
-COPY backend/ .
-COPY scripts/ .
-
-# Set env variables
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1 \
-    PYTHONPATH="/backend"
 
 # Install dependencies:
 COPY requirements.txt .
 
 # Install uv
-RUN pip install uv
+RUN pip install uv virtualenv
 RUN uv pip install -r requirements.txt --system
 
 # Install the required packages
 RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install cron python3 python3-pip postgresql-client
+RUN apt-get -y --fix-missing install cron python3 python3-pip postgresql-client
+
+# Copy your application code
+COPY .env .
+COPY backend/ .
+COPY scripts/ .
 
 # Cron jobs
 RUN echo '* * * * * bash /app/scripts/cron_task.sh >> /var/log/cron.log 2>&1' > cron-config
