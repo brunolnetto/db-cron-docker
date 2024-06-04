@@ -3,14 +3,21 @@ FROM python:3.9-slim-bullseye AS builder
 
 WORKDIR /app
 
-# Install uv
-COPY requirements.txt .
-RUN pip3 install uv virtualenv
-RUN uv pip3 install -r requirements.txt --system
-
 # Install the required packages
 RUN apt-get update && apt-get -y upgrade
 RUN apt-get -y --fix-missing install cron python3 python3-pip postgresql-client
+
+# Activate the virtual environment and install dependencies
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+
+# Install uv
+COPY requirements.txt .
+RUN pip3 install virtualenv
+
+# Create a virtual environment in the container
+RUN pip3 install -r requirements.txt
 
 # Copy your application code
 COPY .env .
