@@ -20,6 +20,8 @@ services:
   cron-task:
     image: cron-task
     container_name: cron-task
+    networks:
+      - cron_net
     build:
       context: .
       dockerfile: Dockerfile

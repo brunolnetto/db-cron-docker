@@ -26,12 +26,14 @@ tom_path=os.path.join(current_folder, '..', '..', '..', toml_file)
 with open(tom_path, "r") as f:
     config = toml.load(f)
 
+env_path=os.path.join(current_folder, '..', '..', '..', '.env')
+
 # Settings class
 class Settings(BaseSettings):
     """App settings."""
 
     model_config = SettingsConfigDict(
-        env_file=".env", 
+        env_file=env_path, 
         env_ignore_empty=True, 
         extra="ignore"
     )
@@ -69,11 +71,26 @@ class Settings(BaseSettings):
         return str(
             MultiHostUrl.build(
                 scheme=POSTGRES_DSN_SCHEME,
-                username=host,
+                username=self.POSTGRES_USER,
                 password=self.POSTGRES_PASSWORD,
                 host=host,
                 port=self.POSTGRES_PORT,
                 path=self.POSTGRES_DBNAME,
+            )
+        )
+    
+    # Postgres settings
+    @computed_field  # type: ignore[misc]
+    @property
+    def SQLALCHEMY_DATABASE_URI_NO_DBNAME(self) -> PostgresDsn:
+        host=self.POSTGRES_DOCKER_HOST if self.ENVIRONMENT == "docker" else self.POSTGRES_HOST
+        return str(
+            MultiHostUrl.build(
+                scheme=POSTGRES_DSN_SCHEME,
+                username=self.POSTGRES_USER,
+                password=self.POSTGRES_PASSWORD,
+                host=host,
+                port=self.POSTGRES_PORT,
             )
         )
 

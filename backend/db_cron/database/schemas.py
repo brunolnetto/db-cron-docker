@@ -4,7 +4,7 @@ from sqlalchemy.pool import QueuePool
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.exc import ProgrammingError
 
 from setup.logging import logger
 from setup.settings import settings
@@ -23,45 +23,46 @@ class Database:
     
         self.engine = create_engine(
             uri, poolclass=QueuePool, pool_size=20, max_overflow=10,
-        ) 
+        )
 
-        if not database_exists(self.engine.url):
-            create_database(self.engine.url)
-            logger.info("New Database Created" + database_exists(self.engine.url)) 
-        else:
-            logger.info("Database Already Exists")
+        self.create_database()
 
         self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
 
-    def setup(self) -> None:
+    def connect(self):
         """
-        Sets up the database with the required tables and permissions.
-    
-        Returns:
-            None: If the database setup was successful.
-        """
-        database_name=settings.POSTGRES_DBNAME
-        user=settings.POSTGRES_USER
-        passw=settings.POSTGRES_PASSWORD
-    
-        # Create the database engine and session maker
-        setup_query=text(f"""
-        CREATE DATABASE {database_name}
-            WITH
-            OWNER = postgres
-            ENCODING = 'UTF8'
-            CONNECTION LIMIT = -1;
-    
-        CREATE USER {user} WITH PASSWORD '{passw}';
-        GRANT pg_read_all_data, pg_write_all_data ON DATABASE {database_name} TO {user};
-        """)
+        Connects to the database.
 
-        try:
-            with self.engine.connect() as conn:
-                conn.execute(setup_query)
-                logger.info('Database setup completed!')
-        except OperationalError as e:
-            logger.error(f"Error setting up database: {e}")
+        Returns:
+            Connection: A connection object for the database.
+        """
+        with self.engine.connect() as conn:
+            yield conn
+
+    def create_database(self):
+        """
+        Attempts to create the database if it doesn't exist.
+
+        Args:
+            engine: The SQLAlchemy engine object.
+            settings: A dictionary containing database connection details.
+
+        Raises:
+            DatabaseError: If there's an error checking or creating the database.
+        """
+        database_name = settings.POSTGRES_DBNAME
+
+        with self.engine.connect() as conn:    
+            try:
+                # Database doesn't exist, proceed with creation
+                ddl_query=text(f"CREATE DATABASE {database_name}")
+                conn.execution_options(isolation_level="AUTOCOMMIT")\
+                    .execute(ddl_query)
+            
+                logger.info(f"Database {database_name} created successfully!")
+            except ProgrammingError:
+                logger.warn(f"Database {database_name} already exists. Skipping creation.")
+
 
     def init(self):
         """
@@ -75,21 +76,11 @@ class Database:
         try:
             # Create all tables defined using the Base class
             Base.metadata.create_all(self.engine)
-            logger.info('Connection to the database established!')        
+            logger.info('Tables created successfully!')        
         
         except OperationalError as e:
             logger.error(f"Error connecting to database: {e}")
             return None
-
-    def connect(self):
-        """
-        Connects to the database.
-
-        Returns:
-            Connection: A connection object for the database.
-        """
-        with self.engine.connect() as conn:
-            yield conn
     
     def __repr__(self) -> str:
         return f"Database(uri={self.uri})" 
