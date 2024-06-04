@@ -69,7 +69,7 @@ class Settings(BaseSettings):
         return str(
             MultiHostUrl.build(
                 scheme=POSTGRES_DSN_SCHEME,
-                username=self.POSTGRES_USER,
+                username=host,
                 password=self.POSTGRES_PASSWORD,
                 host=host,
                 port=self.POSTGRES_PORT,
@@ -77,5 +77,5 @@ class Settings(BaseSettings):
             )
         )
 
-
+# Instantiate the settings
 settings = Settings()
