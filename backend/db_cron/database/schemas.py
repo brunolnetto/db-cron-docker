@@ -60,6 +60,7 @@ class Database:
                     .execute(ddl_query)
             
                 logger.info(f"Database {database_name} created successfully!")
+                
             except ProgrammingError:
                 logger.warn(f"Database {database_name} already exists. Skipping creation.")
 

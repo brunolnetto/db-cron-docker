@@ -20,11 +20,12 @@ services:
   cron-task:
     image: cron-task
     container_name: cron-task
+    depends_on:
+      - db-cron-task
     networks:
       - cron_net
     build:
       context: .
-      dockerfile: Dockerfile
     restart: unless-stopped
     volumes:
       - .:/app

@@ -24,6 +24,13 @@ COPY .env .
 COPY backend/ .
 COPY scripts/ .
 
+ENV PYTHONPATH=/app
+
+COPY ./scripts/ /app/
+COPY ./alembic.ini /app/
+COPY ./backend/pre-start.sh /app/
+COPY ./backend/tests-start.sh /app/
+
 # Cron jobs
 RUN echo '* * * * * bash /app/scripts/cron_task.sh >> /var/log/cron.log 2>&1' > cron-config
 
