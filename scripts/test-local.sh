@@ -13,4 +13,4 @@ fi
 
 docker-compose build
 docker-compose up -d
-docker-compose exec -T cron-task bash /app/tests-start.sh "$@"
+docker-compose exec -T cron-task bash /app/backend/db_cron/tests-start.sh "$@"

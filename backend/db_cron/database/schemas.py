@@ -5,6 +5,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
 from sqlalchemy.exc import ProgrammingError
+import time
 
 from setup.logging import logger
 from setup.settings import settings
@@ -24,7 +25,8 @@ class Database:
         self.engine = create_engine(
             uri, poolclass=QueuePool, pool_size=20, max_overflow=10,
         )
-
+        
+        self.create_connection()
         self.create_database()
 
         self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
@@ -38,6 +40,19 @@ class Database:
         """
         with self.engine.connect() as conn:
             yield conn
+
+    def create_connection(self):
+        conn = None
+        while not conn:
+            try:
+                conn = self.engine.connect()
+                logger.info("Database connection successful")
+            
+            except OperationalError as e:
+                logger.error(e)
+                time.sleep(5)
+
+        return conn
 
     def create_database(self):
         """
