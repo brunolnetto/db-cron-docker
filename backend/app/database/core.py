@@ -75,9 +75,10 @@ class Database:
             DatabaseError: If there's an error checking or creating the database.
         """
         logger.info(f"Creating database at {self.uri}...")
-        
+
         # Create the database if it does not exist
-        create_database(self.uri)
+        if not database_exists(self.uri):
+            create_database(self.uri)
 
 
     def init(self):
