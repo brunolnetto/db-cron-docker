@@ -7,7 +7,7 @@ from sqlalchemy.engine.url import URL
 from sqlalchemy_utils import database_exists, create_database
 
 from setup.logging import logger
-from database.models import Base
+from models.token import Base
 from .utils import get_db_uri
 
 class Database:
@@ -35,7 +35,7 @@ class Database:
             bind=self.engine
         )
 
-        self.create_database()
+        self.create_database()        
         self.test_connection()
         self.init()
 
@@ -47,6 +47,8 @@ class Database:
         Raises:
             Exception: If there's an error connecting to the database.
         """
+
+        logger.info(f"Testing connection to {self.uri}...")
 
         # Test the connection
         try:
@@ -72,12 +74,11 @@ class Database:
         Raises:
             DatabaseError: If there's an error checking or creating the database.
         """
-        # Get the database URI
-        db_uri = get_db_uri()
-        
+        logger.info(f"Creating database at {self.uri}...")
+
         # Create the database if it does not exist
-        if not database_exists(db_uri): 
-            create_database(db_uri)
+        if not database_exists(self.uri):
+            create_database(self.uri)
 
 
     def init(self):
@@ -89,6 +90,7 @@ class Database:
             None: If there was an error connecting to the database.
     
         """
+        logger.info(f"Creating tables...")
         try:
             # Create all tables defined using the Base class
             Base.metadata.create_all(self.engine)
