@@ -58,7 +58,7 @@ db-ip: ## Get the database IP. Usage: make db-ip
 	docker inspect db-cron-task | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
 
 kill-container: ## Kill the database container. Usage: make kill-db
-	docker inspect $(container) | jq -r '.[0].State.Pid' | sudo xargs kill
+	docker inspect $(container) | jq -r '.[0].State.Pid' | sudo xargs kill -9
 
 kill-db: ## Kill the database container. Usage: make kill-db
 	$(MAKE) kill-container container=db-cron-task
@@ -70,10 +70,10 @@ logs: ## Show the logs of the  container. Usage: make log-cron
 	docker logs -f $(container)
 
 logs-db: ## Show the logs of the db-cron-task container. Usage: make log-cron
-	$(MAKE) logs container="db-cron-task"
+	$(MAKE) logs container=db-cron-task
 
 logs-cron: ## Show the logs of the cron-task container. Usage: make log-cron
-	$(MAKE) logs container="cron-task"
+	$(MAKE) logs container=cron-task
 
 kill: kill-db kill-cron ## Kill the database and cron containers. Usage: make kill
 
