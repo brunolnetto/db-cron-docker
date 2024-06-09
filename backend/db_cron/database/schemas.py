@@ -4,7 +4,6 @@ from sqlalchemy import create_engine, pool
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-import time
 from sqlalchemy_utils import database_exists, create_database
 
 from setup.logging import logger
@@ -75,7 +74,7 @@ class Database:
         """
         # Get the database URI
         db_uri = get_db_uri()
-        print(db_uri)
+        
         # Create the database if it does not exist
         if not database_exists(db_uri): 
             create_database(db_uri)
