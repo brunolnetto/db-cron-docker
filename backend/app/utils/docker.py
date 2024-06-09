@@ -1,9 +1,7 @@
 from re import match
 from yaml import safe_load, YAMLError
-from os import environ
-
-from setup.logging import logger
-
+from os import environ, getcwd, path
+from warnings import warn 
 
 def load_docker_compose_file(docker_compose_file="docker-compose.yaml"):
     """
@@ -39,13 +37,15 @@ def get_postgres_host(docker_compose_file="docker-compose.yaml"):
   Returns:
     str: The service name for the 'postgres' image (if found), otherwise None.
   """
-  not_docker=environ.get("ENVIRONMENT") != "docker" and \
-             environ.get("ENVIRONMENT") != "docker-testing"
+  not_docker=environ.get("ENVIRONMENT") != "docker"
   if not_docker:
-    logger.info("Skipping automatic POSTGRES_HOST setup (environment not 'docker')")
+    warn("Skipping automatic POSTGRES_HOST setup (environment not 'docker')")
+    
     return None
 
-  data = load_docker_compose_file(docker_compose_file)
+  docker_compose_path=path.join(path.dirname(__file__), '..', '..', '..', docker_compose_file)
+  
+  data = load_docker_compose_file(docker_compose_path)
   if data:
     # Case-insensitive search for 'postgres' at the beginning
     postgres_regex = r"(?i)^postgres.*"
@@ -53,10 +53,10 @@ def get_postgres_host(docker_compose_file="docker-compose.yaml"):
     for service_name, service_config in services.items():
         
       if match(postgres_regex, service_config.get("image", "")):
-        logger.info(f"Using service name '{service_name}' for POSTGRES_HOST")
+        warn(f"Using service name '{service_name}' for POSTGRES_HOST")
         environ["POSTGRES_HOST"] = service_name
         return service_name
 
   else:
-    logger.warn("WARNING: No service with image 'postgres' found in docker-compose.yaml")
+    warn("No service with image 'postgres' found in docker-compose.yaml")
     return None

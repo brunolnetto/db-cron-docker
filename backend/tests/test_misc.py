@@ -3,8 +3,8 @@ from os import path, makedirs
 import shutil
 from shutil import rmtree
 
-from backend.db_cron.setup.logging import logger
-from backend.db_cron.utils.misc import (
+from backend.app.setup.logging import logger
+from backend.app.utils.misc import (
   repeat_token, 
   invert_dict_list, 
   makedir,
