@@ -11,5 +11,5 @@ A cron task with database. This repository is intended for Linux users.
 5. Rename `.env.template` for `.env` and alter required credentials if needed;
 6. Run `docker compose up -d`;
 7. Run `make up`;
-8. Run `make log-cron`;
+8. Run `make logs-cron`;
 
