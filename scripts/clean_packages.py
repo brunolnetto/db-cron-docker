@@ -1,6 +1,5 @@
 import re
 from re import escape
-from typing import List
 import argparse
 import subprocess
 import os
@@ -44,7 +43,7 @@ def run_pip_compile(input_file: str, output_file: str) -> int:
 def find_packages_with_comment(
         requirements_file: str,
         pip_compile_output_file: str,
-        requirements_output_file: str) -> List[str]:
+        requirements_output_file: str) -> int:
     """
     Finds packages with a specific comment in a requirements file and writes them to a new file.
 
@@ -63,10 +62,6 @@ def find_packages_with_comment(
         rf"^([^\s#][\w\-]+)==([\d\.]+)\n\s+# via -r {escape(name)}.{escape(extension)}$"
     )
 
-    # Get package count after operation
-    with open(requirements_output_file, "r") as file:
-        before_lines = file.readlines()
-
     with open(pip_compile_output_file, "r") as file:
         with open(requirements_output_file, "w") as out_file:
             text = file.read()
@@ -83,9 +78,10 @@ def find_packages_with_comment(
 
     # Get package count after operation
     with open(requirements_output_file, "r") as file:
-        after_lines = file.readlines()
+        lines = file.readlines()
+        package_count = len(lines)
 
-    return list(set(before_lines)-set(after_lines))
+    return package_count
 
 
 if __name__ == "__main__":
@@ -112,10 +108,10 @@ if __name__ == "__main__":
     run_pip_compile(args.requirements_file, tmp_file)
 
     # Get package count after operation
-    packages_removed = find_packages_with_comment(
+    package_count_after = find_packages_with_comment(
         args.requirements_file, tmp_file, args.output_file
     )
 
     os.remove(tmp_file)
 
-    print(f"We removed following packages: {packages_removed}")
+    print(f"We removed {package_count_before-package_count_after} packages.")   

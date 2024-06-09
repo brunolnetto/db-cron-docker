@@ -5,5 +5,5 @@
 source "/opt/venv/bin/activate"
 
 echo "Cron task is running" 
-/opt/venv/bin/python3 /app/backend/db_cron/main.py
+/opt/venv/bin/python3 /app/backend/app/main.py
 
