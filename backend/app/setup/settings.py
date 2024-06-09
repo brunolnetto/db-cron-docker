@@ -3,10 +3,12 @@ from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
 )
+from database.utils import get_db_uri
 from pydantic import (
     PostgresDsn,
     computed_field,
 )
+from dotenv import load_dotenv
 import os
 
 from typing import Union
@@ -67,32 +69,8 @@ class Settings(BaseSettings):
     @computed_field  # type: ignore[misc]
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> PostgresDsn:
-        host=self.POSTGRES_DOCKER_HOST if self.ENVIRONMENT == "docker" else self.POSTGRES_HOST
-        return str(
-            MultiHostUrl.build(
-                scheme=POSTGRES_DSN_SCHEME,
-                username=self.POSTGRES_USER,
-                password=self.POSTGRES_PASSWORD,
-                host=host,
-                port=self.POSTGRES_PORT,
-                path=self.POSTGRES_DBNAME,
-            )
-        )
+        load_dotenv()
+        return get_db_uri()
     
-    # Postgres settings
-    @computed_field  # type: ignore[misc]
-    @property
-    def SQLALCHEMY_DATABASE_URI_NO_DBNAME(self) -> PostgresDsn:
-        host=self.POSTGRES_DOCKER_HOST if self.ENVIRONMENT == "docker" else self.POSTGRES_HOST
-        return str(
-            MultiHostUrl.build(
-                scheme=POSTGRES_DSN_SCHEME,
-                username=self.POSTGRES_USER,
-                password=self.POSTGRES_PASSWORD,
-                host=host,
-                port=self.POSTGRES_PORT,
-            )
-        )
-
 # Instantiate the settings
 settings = Settings()

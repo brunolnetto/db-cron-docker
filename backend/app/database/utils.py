@@ -8,8 +8,7 @@ def get_connection_dict():
     load_dotenv(env_path)
 
     # Get the host based on the environment
-    is_docker=getenv('ENVIRONMENT') == 'docker' or \
-              getenv('ENVIRONMENT') == 'docker-testing'
+    is_docker=getenv('ENVIRONMENT') == 'docker'
     if is_docker:
         host = get_postgres_host()
     else: 
@@ -44,7 +43,7 @@ def get_db_uri(has_dbname=True):
     credentials=f"{conn_dict['user']}:{conn_dict['password']}"
     route=f"{conn_dict['host']}:{conn_dict['port']}"
     db_name=conn_dict['database_name']
-
+    
     if has_dbname:
         return f"{dsn_str}://{credentials}@{route}/{db_name}"
     else:

@@ -26,7 +26,7 @@ clean-test: # Remove test and coverage artifacts
 	rm -fr .tox/ .testmondata* .coverage coverage.* htmlcov/ .pytest_cache
 
 clean-cache: # remove test and coverage artifacts
-	find . -name '*cache*' -exec rm -rf {} +
+	find . -name '*__cache__*' -exec rm -rf {} +
 
 clean: clean-logs clean-test clean-cache ## Add a rule to remove unnecessary assets. Usage: make clean
 
@@ -54,8 +54,11 @@ replace: ## Replaces a token in the code. Usage: make replace token=your_token
 minimal-requirements: ## Generates minimal requirements. Usage: make minimal-requirements
 	python3 scripts/clean_packages.py requirements.txt requirements.txt
 
-db-ip: ## Get the database IP. Usage: make db-ip
+ip: ## Get the IP of a container. Usage: make ip container="db-cron-task"
 	docker inspect db-cron-task | jq -r '.[0].NetworkSettings.Networks[].IPAddress'
+
+ip-db: ## Get the database IP. Usage: make db-ip
+	$(MAKE) ip container="db-cron-task"
 
 kill-container: ## Kill the database container. Usage: make kill-db
 	docker inspect $(container) | jq -r '.[0].State.Pid' | sudo xargs kill -9
