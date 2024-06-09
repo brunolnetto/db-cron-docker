@@ -24,8 +24,6 @@ COPY .env .
 COPY backend/ .
 COPY scripts/ .
 
-ENV PYTHONPATH=/app
-
 COPY ./scripts/ /app/
 COPY ./alembic.ini /app/
 

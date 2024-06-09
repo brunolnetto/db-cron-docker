@@ -1,15 +1,15 @@
 from psycopg2 import OperationalError
 from sqlalchemy import create_engine
-from sqlalchemy.pool import QueuePool
+from sqlalchemy import create_engine, pool
 from sqlalchemy import text
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.engine.url import URL
-from sqlalchemy.exc import ProgrammingError
 import time
+from sqlalchemy_utils import database_exists, create_database
 
 from setup.logging import logger
-from setup.settings import settings
 from database.models import Base
+from .utils import get_db_uri
 
 class Database:
     """
@@ -23,36 +23,44 @@ class Database:
         self.uri = uri
     
         self.engine = create_engine(
-            uri, poolclass=QueuePool, pool_size=20, max_overflow=10,
+            uri,
+            poolclass=pool.QueuePool,   # Use connection pooling
+            pool_size=20,               # Adjust pool size based on your workload
+            max_overflow=10,            # Adjust maximum overflow connections
+            pool_recycle=3600           # Periodically recycle connections (optional)
         )
-        
-        self.create_connection()
+
+        self.session_maker = sessionmaker(
+            autocommit=False, 
+            autoflush=False, 
+            bind=self.engine
+        )
+
         self.create_database()
+        self.test_connection()
+        self.init()
 
-        self.session_maker = sessionmaker(autocommit=False, autoflush=False, bind=self.engine)
-
-    def connect(self):
+    def test_connection(self):
         """
-        Connects to the database.
 
-        Returns:
-            Connection: A connection object for the database.
+        Tests the connection to the database.
+
+        Raises:
+            Exception: If there's an error connecting to the database.
         """
-        with self.engine.connect() as conn:
-            yield conn
 
-    def create_connection(self):
-        conn = None
-        while not conn:
-            try:
-                conn = self.engine.connect()
-                logger.info("Database connection successful")
-            
-            except OperationalError as e:
-                logger.error(e)
-                time.sleep(5)
+        # Test the connection
+        try:
+            with self.engine.connect() as conn:
+                query = text("SELECT 1")
 
-        return conn
+                # Test the connection
+                conn.execute(query)
+
+                logger.info('Connection to the database established!')
+        
+        except Exception as e:
+            logger.error(f"Error connecting to database: {e}")
 
     def create_database(self):
         """
@@ -65,19 +73,12 @@ class Database:
         Raises:
             DatabaseError: If there's an error checking or creating the database.
         """
-        database_name = settings.POSTGRES_DBNAME
-
-        with self.engine.connect() as conn:    
-            try:
-                # Database doesn't exist, proceed with creation
-                ddl_query=text(f"CREATE DATABASE {database_name}")
-                conn.execution_options(isolation_level="AUTOCOMMIT")\
-                    .execute(ddl_query)
-            
-                logger.info(f"Database {database_name} created successfully!")
-                
-            except ProgrammingError:
-                logger.warn(f"Database {database_name} already exists. Skipping creation.")
+        # Get the database URI
+        db_uri = get_db_uri()
+        print(db_uri)
+        # Create the database if it does not exist
+        if not database_exists(db_uri): 
+            create_database(db_uri)
 
 
     def init(self):
