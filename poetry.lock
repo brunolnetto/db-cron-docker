@@ -146,6 +146,31 @@ files = [
 ]
 
 [[package]]
+name = "colorama"
+version = "0.4.6"
+description = "Cross-platform colored terminal text."
+optional = false
+python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,!=3.6.*,>=2.7"
+files = [
+    {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
+    {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
+]
+
+[[package]]
+name = "exceptiongroup"
+version = "1.2.1"
+description = "Backport of PEP 654 (exception groups)"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "exceptiongroup-1.2.1-py3-none-any.whl", hash = "sha256:5258b9ed329c5bbdd31a309f53cbfb0b155341807f6ff7606a1e801a891b29ad"},
+    {file = "exceptiongroup-1.2.1.tar.gz", hash = "sha256:a4785e48b045528f5bfe627b6ad554ff32def154f42372786903b7abcfe1aa16"},
+]
+
+[package.extras]
+test = ["pytest (>=6)"]
+
+[[package]]
 name = "greenlet"
 version = "3.0.3"
 description = "Lightweight in-process concurrent programming"
@@ -265,6 +290,17 @@ docs = ["furo", "jaraco.packaging (>=9.3)", "jaraco.tidelift (>=1.4)", "rst.link
 testing = ["jaraco.test (>=5.4)", "pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-cov", "pytest-enabler (>=2.2)", "pytest-mypy", "pytest-ruff (>=0.2.1)", "zipp (>=3.17)"]
 
 [[package]]
+name = "iniconfig"
+version = "2.0.0"
+description = "brain-dead simple config-ini parsing"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "iniconfig-2.0.0-py3-none-any.whl", hash = "sha256:b6a85871a79d2e3b22d2d1b94ac2824226a63c6b741c88f7ae975f18b6778374"},
+    {file = "iniconfig-2.0.0.tar.gz", hash = "sha256:2d91e135bf72d31a410b17c16da610a82cb55f6b0477d1a902134b24a455b8b3"},
+]
+
+[[package]]
 name = "mako"
 version = "1.3.5"
 description = "A super-fast templating language that borrows the best ideas from the existing templating languages."
@@ -351,6 +387,32 @@ files = [
     {file = "MarkupSafe-2.1.5-cp39-cp39-win_amd64.whl", hash = "sha256:fa173ec60341d6bb97a89f5ea19c85c5643c1e7dedebc22f5181eb73573142c5"},
     {file = "MarkupSafe-2.1.5.tar.gz", hash = "sha256:d283d37a890ba4c1ae73ffadf8046435c76e7bc2247bbb63c00bd1a709c6544b"},
 ]
+
+[[package]]
+name = "packaging"
+version = "24.0"
+description = "Core utilities for Python packages"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "packaging-24.0-py3-none-any.whl", hash = "sha256:2ddfb553fdf02fb784c234c7ba6ccc288296ceabec964ad2eae3777778130bc5"},
+    {file = "packaging-24.0.tar.gz", hash = "sha256:eb82c5e3e56209074766e6885bb04b8c38a0c015d0a30036ebe7ece34c9989e9"},
+]
+
+[[package]]
+name = "pluggy"
+version = "1.5.0"
+description = "plugin and hook calling mechanisms for python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pluggy-1.5.0-py3-none-any.whl", hash = "sha256:44e1ad92c8ca002de6377e165f3e0f1be63266ab4d554740532335b9d75ea669"},
+    {file = "pluggy-1.5.0.tar.gz", hash = "sha256:2cffa88e94fdc978c4c574f15f9e59b7f4201d439195c3715ca9e2486f1d0cf1"},
+]
+
+[package.extras]
+dev = ["pre-commit", "tox"]
+testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "psycopg2-binary"
@@ -563,6 +625,28 @@ toml = ["tomli (>=2.0.1)"]
 yaml = ["pyyaml (>=6.0.1)"]
 
 [[package]]
+name = "pytest"
+version = "8.2.2"
+description = "pytest: simple powerful testing with Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "pytest-8.2.2-py3-none-any.whl", hash = "sha256:c434598117762e2bd304e526244f67bf66bbd7b5d6cf22138be51ff661980343"},
+    {file = "pytest-8.2.2.tar.gz", hash = "sha256:de4bb8104e201939ccdc688b27a89a7be2079b22e2bd2b07f806b6ba71117977"},
+]
+
+[package.dependencies]
+colorama = {version = "*", markers = "sys_platform == \"win32\""}
+exceptiongroup = {version = ">=1.0.0rc8", markers = "python_version < \"3.11\""}
+iniconfig = "*"
+packaging = "*"
+pluggy = ">=1.5,<2.0"
+tomli = {version = ">=1", markers = "python_version < \"3.11\""}
+
+[package.extras]
+dev = ["argcomplete", "attrs (>=19.2)", "hypothesis (>=3.56)", "mock", "pygments (>=2.7.2)", "requests", "setuptools", "xmlschema"]
+
+[[package]]
 name = "python-dotenv"
 version = "1.0.1"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -750,6 +834,36 @@ timezone = ["python-dateutil"]
 url = ["furl (>=0.4.1)"]
 
 [[package]]
+name = "sqlmodel"
+version = "0.0.19"
+description = "SQLModel, SQL databases in Python, designed for simplicity, compatibility, and robustness."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sqlmodel-0.0.19-py3-none-any.whl", hash = "sha256:6c8125d4101970d031e9aae970b20cbeaf44149989f8366d939f4ab21aab8763"},
+    {file = "sqlmodel-0.0.19.tar.gz", hash = "sha256:95449b0b48a40a3eecf0a629fa5735b9dfc8a5574a91090d24ca17f02246ad96"},
+]
+
+[package.dependencies]
+pydantic = ">=1.10.13,<3.0.0"
+SQLAlchemy = ">=2.0.14,<2.1.0"
+
+[[package]]
+name = "tenacity"
+version = "8.3.0"
+description = "Retry code until it succeeds"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "tenacity-8.3.0-py3-none-any.whl", hash = "sha256:3649f6443dbc0d9b01b9d8020a9c4ec7a1ff5f6f3c6c8a036ef371f573fe9185"},
+    {file = "tenacity-8.3.0.tar.gz", hash = "sha256:953d4e6ad24357bceffbc9707bc74349aca9d245f68eb65419cf0c249a1949a2"},
+]
+
+[package.extras]
+doc = ["reno", "sphinx"]
+test = ["pytest", "tornado (>=4.5)", "typeguard"]
+
+[[package]]
 name = "toml"
 version = "0.10.2"
 description = "Python Library for Tom's Obvious, Minimal Language"
@@ -758,6 +872,17 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 files = [
     {file = "toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {file = "toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
+
+[[package]]
+name = "tomli"
+version = "2.0.1"
+description = "A lil' TOML parser"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "tomli-2.0.1-py3-none-any.whl", hash = "sha256:939de3e7a6161af0c887ef91b7d41a53e7c5a1ca976325f429cb46ea9bc30ecc"},
+    {file = "tomli-2.0.1.tar.gz", hash = "sha256:de526c12914f0c550d15924c62d72abc48d6fe7364aa87328337a31007fe8a4f"},
 ]
 
 [[package]]
@@ -790,28 +915,28 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "uv"
-version = "0.2.9"
+version = "0.2.6"
 description = "An extremely fast Python package installer and resolver, written in Rust."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "uv-0.2.9-py3-none-linux_armv6l.whl", hash = "sha256:1942808d1df3fab9482c5ab47484a7a5eb75aacea9b27c2cbbfb60cb826f4c56"},
-    {file = "uv-0.2.9-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:8a345a0e4d5b4a31297bb5aea9ef5dd84d91faff1dcb7939e263d4e7b344ae15"},
-    {file = "uv-0.2.9-py3-none-macosx_11_0_arm64.whl", hash = "sha256:692fed655d5cbb457fa2762085bb49f9a74a13ad1608ebfa9b1bd81ed09bdaee"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:e63daf67b3e6922a58b571a5cf63605e737cb2f34b48973014cc0fd4e8528ecd"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:5b0c27f12ec91e8ee6066fd8ee0b3405a791350e8898cdfa99177048c3b364a6"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:3a9914fab493978eed5781b3fc13126836472f1a91f1092c07d825150405a42a"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:92e0af80ab5c40bed88064ff1adc95f587c501ed8371077330703edfafe78661"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:718d3e5e46084c7c6305a20789e27eeea2171a85ef3af37b33324a30b04dedc8"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:290c23ed4d2a16500c685e347326c2137931350f7148e41bb04941a9d90e2d45"},
-    {file = "uv-0.2.9-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:23cf2e847a0e02e2ddc938c164dbec4878583c61fabb0a1134d00fc9ebf92076"},
-    {file = "uv-0.2.9-py3-none-musllinux_1_1_armv7l.whl", hash = "sha256:c4d6914fd31213512e75d57ece4efed443aec669fd23ed83c098530a3bf7f39f"},
-    {file = "uv-0.2.9-py3-none-musllinux_1_1_i686.whl", hash = "sha256:361368cd38c0d5595374bc22c4733d8c2252c00649158f2168f894a098823c5e"},
-    {file = "uv-0.2.9-py3-none-musllinux_1_1_ppc64le.whl", hash = "sha256:22deea3d7f83845a54503d1c2d5ff49d28cff109123df415be4496cf1c851b2e"},
-    {file = "uv-0.2.9-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:8ccb4e20606a1cd710573c63b0d79c9ae7d3fbb97d7962efb05344d9b9c83f6b"},
-    {file = "uv-0.2.9-py3-none-win32.whl", hash = "sha256:326d88b12745558eb2b49968c03e088ccab3a8860a7962ee3a0fcfc1289fdb41"},
-    {file = "uv-0.2.9-py3-none-win_amd64.whl", hash = "sha256:6b5f4f612c3f2008314fcd2415a1d0c22050d87324476aa8907695723c72483b"},
-    {file = "uv-0.2.9.tar.gz", hash = "sha256:6251f4d7d77d29aab625b02a93160ede1ba9edd766918da5064552219561e245"},
+    {file = "uv-0.2.6-py3-none-linux_armv6l.whl", hash = "sha256:955ea5a0845731c8394d2a425e2d353ead419e80bd47792f904aac59bbe6378d"},
+    {file = "uv-0.2.6-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:aaecaf6d45ee5623eee5e1a1c34d57bffab75bdd779ed888d0026bf7d0192dc0"},
+    {file = "uv-0.2.6-py3-none-macosx_11_0_arm64.whl", hash = "sha256:1ac3b96c6284ef2e5367e62f31472cc3f27ba4c7e14f579e7c6dbd081943e38b"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:35e0590eed0db7ce024679110e668af0cc393eb63d3d0ece34f315e3e065a0c2"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:14dddd13b6641bc0064848b906235ea32e188d6be6f1b496df6ff6d8e27031fa"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:88a35ee5bf821c3ccca02984b08a5654f1e77fce2b75fbca3a210b769bf0ee7a"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:526d6a3206b5e50b08629b579cdbdb8b093d1766035ec2149955c0d96eddc884"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:02b7d9fc2801059a36d73a927a63927ab52cc0fff4558b14374778edc62e9840"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:42178f251aab2dd3d98aefe002b245a5767336fd96c4106c39a3cf06acab49d6"},
+    {file = "uv-0.2.6-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9d77160f7e0705d1e1703774555cb78e1b8ef81c7907cc72b9d86c536e79b4c7"},
+    {file = "uv-0.2.6-py3-none-musllinux_1_1_armv7l.whl", hash = "sha256:abb095721824509f476760d6b208327f75ad128f32dba8164c411a31c50b1e06"},
+    {file = "uv-0.2.6-py3-none-musllinux_1_1_i686.whl", hash = "sha256:9184b9b6dd2c8f15d1d821519692c2277d92f10303ef77be090c5ede1c48dfdf"},
+    {file = "uv-0.2.6-py3-none-musllinux_1_1_ppc64le.whl", hash = "sha256:e888cbc3b743a760e657784b7ed43054db12808690a943dfef4818510a3e32ac"},
+    {file = "uv-0.2.6-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:7c43452c62833e583b9bf0fcea63aaa9a0319f06196b790ecbc67967204f059f"},
+    {file = "uv-0.2.6-py3-none-win32.whl", hash = "sha256:93128e72d161bc9e594fc88ba1925853ccad28596cbe0e1277f664d33e3994df"},
+    {file = "uv-0.2.6-py3-none-win_amd64.whl", hash = "sha256:438bbfd98ced9c7208137068fa2a0953a8a4cc3b835d08a984c6381566b2a032"},
+    {file = "uv-0.2.6.tar.gz", hash = "sha256:1fb1700cef0f1dcc79366d54743433887286ba579c055107c0f5bc212a8f2cc2"},
 ]
 
 [[package]]
@@ -842,4 +967,4 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-it
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "8e0965b33497d2b8db1553966371796b4b20e2eae72a272af8a71e68cbf1442d"
+content-hash = "e37080862bc583183aec1d3d98e58f12025ba16f292161a01b26980bf43b53ca"
