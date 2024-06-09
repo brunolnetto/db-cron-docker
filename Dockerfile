@@ -1,5 +1,5 @@
 # Stage 1: Install dependencies
-FROM python:3.9-slim-bullseye AS builder
+FROM python:3.9-slim-bullseye
 
 WORKDIR /app
 
@@ -23,13 +23,7 @@ RUN pip3 install -r requirements.txt
 COPY .env .
 COPY backend/ .
 COPY scripts/ .
-
-ENV PYTHONPATH=/app
-
-COPY ./scripts/ /app/
-COPY ./alembic.ini /app/
-COPY ./backend/pre-start.sh /app/
-COPY ./backend/tests-start.sh /app/
+COPY alembic.ini .
 
 # Cron jobs
 RUN echo '* * * * * bash /app/scripts/cron_task.sh >> /var/log/cron.log 2>&1' > cron-config

@@ -1,9 +1,8 @@
 from sqlalchemy import (
-  Column, Integer, String, TIMESTAMP
+  Column, Integer, String
 )
 from typing import Generic, TypeVar
 from pydantic import BaseModel, Field
-from datetime import datetime
 
 from sqlalchemy.ext.declarative import declarative_base
 
