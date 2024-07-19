@@ -10,5 +10,5 @@ sqlalchemy-utils==0.41.2
 tenacity==8.4.1
 sqlmodel==0.0.20
 toml==0.10.2
-uv==0.2.13
+uv==0.2.26
 wget==3.2
