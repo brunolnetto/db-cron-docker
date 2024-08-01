@@ -21,7 +21,7 @@ SQLAlchemy = "^2.0.0"
 sqlalchemy-utils = "^0.41.2"
 wget = "^3.2"
 uv = "0.2.32"
-tenacity = "8.5.0"
+tenacity = "9.0.0"
 sqlmodel = "0.0.21"
 toml = "0.10.2"
 
