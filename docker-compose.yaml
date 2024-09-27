@@ -2,7 +2,7 @@ services:
   db-cron-task:
     container_name: db-cron-task
     hostname: postgres
-    image: postgres:14
+    image: postgres:17
     restart: always
     env_file: .env
     expose  :
