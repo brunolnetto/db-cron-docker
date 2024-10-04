@@ -931,29 +931,29 @@ zstd = ["zstandard (>=0.18.0)"]
 
 [[package]]
 name = "uv"
-version = "0.4.16"
+version = "0.4.18"
 description = "An extremely fast Python package and project manager, written in Rust."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "uv-0.4.16-py3-none-linux_armv6l.whl", hash = "sha256:9de9bfd82d5ec1b0180976b1e5db389c7f13e59a2b08037faa93fef474c63517"},
-    {file = "uv-0.4.16-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:d501b14f491057c102e2f6be92e5a1da973453b893fd727a552908fe8a8a1061"},
-    {file = "uv-0.4.16-py3-none-macosx_11_0_arm64.whl", hash = "sha256:97529f45c0720cafa6870ae3d9a43449c34f6c762505249dcd033ca6d7b121ec"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:c390d0887e0bc918d96660460a89101368af28815c40ea26795ab801651d128e"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:c54b1725836e5a84168f705a395e21353bdbb2d47e77d645cb0622a77defcf04"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:43c7339114431565679f42d3c85b4c7ba5dfdf1d9ad5f89682c1177828161602"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:5ee1c25c8296d932fa2f0629ad6d1b9b04e9f5f0a0f1e90e64d488d13861e533"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:68390b39b36ddbfe48033f308f4e983879b49ce345de2105e5cf3d3baa22dfea"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:c92a1a2bf541a3f65b5b2502ca51f8709e8ac8bb85846c87c65d343e66ede622"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:050715938e78c6d69d9bdd6a9bd536c92c9f516ac0ca252726c546e8dc7af30d"},
-    {file = "uv-0.4.16-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:29fdf36b2e4de02e676bb2ae3ca25bccb97d457f8bbb5c5a58fc4f223df1e235"},
-    {file = "uv-0.4.16-py3-none-musllinux_1_1_armv7l.whl", hash = "sha256:8147b2998bf9eb743d872de3e469bbe71622126be54ca377bfc0028042bfdad2"},
-    {file = "uv-0.4.16-py3-none-musllinux_1_1_i686.whl", hash = "sha256:87505d25163f6fe0afd85c7952ab66593aa1ecc77a41f65e910760e90bd53b4f"},
-    {file = "uv-0.4.16-py3-none-musllinux_1_1_ppc64le.whl", hash = "sha256:2a566febc7cbe76e42ad83352c28dd2fe64290e6809f1dfd07f3f158ea5cc68d"},
-    {file = "uv-0.4.16-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:d1712f1c0df309f7682d7e40783ab55927cc1e7108e43847b2a0b795ea855c45"},
-    {file = "uv-0.4.16-py3-none-win32.whl", hash = "sha256:1497dbb3a1b41c6c407e0dc7c6b40ca012796b3f9370f0dcbe4edf4dc098a2ec"},
-    {file = "uv-0.4.16-py3-none-win_amd64.whl", hash = "sha256:136f4b1f8d3a6f2e7f87d009cc4b75be1e52b8b9837ee97600fdd3b2db960a53"},
-    {file = "uv-0.4.16.tar.gz", hash = "sha256:2144995a87b161d063bd4ef8294b1e948677bd90d01f8394d0e3fca037bb847f"},
+    {file = "uv-0.4.18-py3-none-linux_armv6l.whl", hash = "sha256:1944c0ee567ca7db60705c5d213a75b25601094b026cc17af3e704651c1e3753"},
+    {file = "uv-0.4.18-py3-none-macosx_10_12_x86_64.whl", hash = "sha256:5234d47abe339c15c318e8b1bbd136ea61c4574503eda6944a5aaea91b7f6775"},
+    {file = "uv-0.4.18-py3-none-macosx_11_0_arm64.whl", hash = "sha256:0c4cb31594cb2ed21bd3b603a207e99dfb9610c3db44da9dbbff0f237270f582"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_aarch64.manylinux2014_aarch64.musllinux_1_1_aarch64.whl", hash = "sha256:8af0b60adcfa2e87c77a3008d3ed6e0b577c0535468dc58e06f905ccbd27124f"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:f043c3c4514c149a00a86c3bf44df43062416d41002114e60df33895e8511c41"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1b59d742b81c7acf75a3aac71d9b24e07407e044bebcf39d3fc3c87094014e20"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_ppc64.manylinux2014_ppc64.whl", hash = "sha256:fcc606da545d9a5ec5c2209e7eb2a4eb76627ad75df5eb5616c0b40789fe3933"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:96c3ccee0fd8cf0a9d679407e157b76db1a854638a4ba4fa14f4d116b4e39b03"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:df225a568da01f3d7e126d886c3694c5a4a7d8b85162a4d6e97822716ca0e7c4"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b08564c8c7e8b3665ad1d6c8924d4654451f96c956eb5f3b8ec995c77734163d"},
+    {file = "uv-0.4.18-py3-none-manylinux_2_28_aarch64.whl", hash = "sha256:4be600474db6733078503012f2811c4383f490f77366e66b5f686316db52c870"},
+    {file = "uv-0.4.18-py3-none-musllinux_1_1_armv7l.whl", hash = "sha256:3e3ade81af961f48517fcd99318192c9c635ef9a38a7ca65026af0c803c71906"},
+    {file = "uv-0.4.18-py3-none-musllinux_1_1_i686.whl", hash = "sha256:4ec60141f92c9667548ebad8daf4c13aabdb58b22c21dcd834641e791e55f289"},
+    {file = "uv-0.4.18-py3-none-musllinux_1_1_ppc64le.whl", hash = "sha256:6566448278b6849846b6c586fc86748c66aa53ed70f5568e713122543cc86a50"},
+    {file = "uv-0.4.18-py3-none-musllinux_1_1_x86_64.whl", hash = "sha256:ade18dbbeb05c8cba4f842cc15b20e59467069183f348844750901227df5008d"},
+    {file = "uv-0.4.18-py3-none-win32.whl", hash = "sha256:157e4a2c063b270de348862dd31abfe600d5601183fd2a6efe552840ac179626"},
+    {file = "uv-0.4.18-py3-none-win_amd64.whl", hash = "sha256:8250148484e1b0f89ec19467946e86ee303619985c23228b5a2f2d94d15c6d8b"},
+    {file = "uv-0.4.18.tar.gz", hash = "sha256:954964eff8c7e2bc63dd4beeb8d45bcaddb5149a7ef29a36abd77ec76c8b837e"},
 ]
 
 [[package]]
@@ -984,4 +984,4 @@ test = ["big-O", "jaraco.functools", "jaraco.itertools", "jaraco.test", "more-it
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "fa853e39a16f09c23d96f51f6fa02006d31211931a71da6d35317082879211dc"
+content-hash = "11ee7cc4825c52d31ced558db74536792f04fbdcc101b2ceff18b633ad4a3349"
