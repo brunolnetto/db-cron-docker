@@ -7,7 +7,7 @@ pyyaml==6.0.2
 requests==2.32.3
 ruff==0.11.2
 sqlalchemy-utils==0.41.2
-tenacity==9.0.0
+tenacity==9.1.2
 sqlmodel==0.0.24
 toml==0.10.2
 uv==0.6.11
