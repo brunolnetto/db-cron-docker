@@ -22,7 +22,7 @@ sqlalchemy-utils = "^0.41.2"
 wget = "^3.2"
 uv = "0.6.10"
 tenacity = "9.1.2"
-sqlmodel = "0.0.24"
+sqlmodel = "0.0.42"
 toml = "0.10.2"
 
 [build-system]
