@@ -8,7 +8,7 @@ requests==2.32.3
 ruff==0.11.6
 sqlalchemy-utils==0.41.2
 tenacity==9.1.2
-sqlmodel==0.0.24
+sqlmodel==0.0.42
 toml==0.10.2
 uv==0.6.16
 wget==3.2
